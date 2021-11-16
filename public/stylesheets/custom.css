@@ -1,0 +1,49 @@
+.evidence-thumbnail{
+    max-width: 100px;
+    max-height: 100px;
+}
+
+#map{ 
+    height:300px; 
+    width: 100%; 
+}
+
+#cluster-map{ 
+    height:400px; 
+    width: 100%; 
+
+}
+
+.user-panel{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items:center;
+}
+
+.user-panel img{
+    max-width: 30%;
+    margin: 5%;
+}
+
+.user-panel .panel{
+    width: 40%;
+    padding: 2em;
+}
+
+
+@media screen and (max-width: 768px) {
+    .user-panel{
+        flex-direction: column;
+    }
+    .user-panel .panel{
+        width: 80%;
+        padding: 1em;
+    }
+
+    .user-panel img{
+        max-width: 30%;
+        margin: 5%;
+    }
+
+}

@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="user-panel">
+    <img src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <div class="panel">  
+        <h3>Login</h3>
+        <hr>
+        <form action="" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" name="username" id="username" required autofocus>
+                <div class="valid-feedback">
+                        Looks good!
+                </div>
+            </div>  
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" name="password" id="password" required>
+                <div class="valid-feedback">
+                        Looks good!
+                </div>
+            </div>   
+            <button class="btn btn-success">Sign in</button>
+        </form>
+    </div>
+</div>

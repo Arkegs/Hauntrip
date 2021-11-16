@@ -1,0 +1,87 @@
+<% layout('./layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/stars.css">
+<script>
+    const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+    const mystery = <%-JSON.stringify(mystery)%>;
+</script>
+
+<div class="row">
+    <div class="col-6">
+        <div class="card mb-3">
+            <div id="map"></div>
+            <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1636751000/Hauntrip/unavailable_g5kbfo.png' %>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title"><%= mystery.title %></h5>
+                <p class="starability-result" data-rating="3"></p>
+                <p class="card-text"><%= mystery.description %></p>
+                <p class="card-text text-muted"><%= mystery.location %></p>
+                <p class="card-text text-muted">By <%= mystery.author.username %></p>
+                <a href="/mysteries" class="btn btn-primary">Go back</a>
+                <% if(currentUser && mystery.author.equals(currentUser._id)){ %>
+                <a href="/mysteries/<%= mystery._id %>/edit" class="btn btn-primary">Edit</a>
+                <form class="d-inline" action="/mysteries/<%= mystery._id %>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+                <% } %>
+            </div>
+            <div class="card-footer text-muted">
+                10 days ago
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <% if(currentUser){ %>
+            <h2>Is it scary?</h2>
+                <div class="mb-3">
+                    <form action="" class="star-form" method="POST">
+                        <button type="submit" name="spookiness" value="5">&#9733;</button>
+                        <button type="submit" name="spookiness" value="4">&#9733;</button>
+                        <button type="submit" name="spookiness" value="3">&#9733;</button>
+                        <button type="submit" name="spookiness" value="2">&#9733;</button>
+                        <button type="submit" name="spookiness" value="1">&#9733;</button>
+                    </form>
+                </div>  
+            </form>
+            <h2>Leave some evidence!</h2>
+            <form class="mb-3 validated-form" action="/mysteries/<%= mystery._id %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
+                <div class="mb-3">
+                    <label class="form-label" for="conclusion">Mystery credibility</label>
+                    <input class="form-range" type="range" min="1" max="2" name="evidence[conclusion]" id="conclusion">
+                </div>  
+                <div class="mb-3">
+                    <label class="form-label" for="title">Evidence title</label>
+                    <input class="form-control" type="text" name="evidence[title]" id="title" required/>
+                </div>  
+                <div class="mb-3">
+                    <label class="form-label" for="body">Evidence description</label>
+                    <textarea class="form-control" name="evidence[body]" id="body" cols="30" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="images">Images</label>
+                    <input type="file" name="images" id="images" multiple />
+                </div>
+                <button>Submit</button>
+            </form>
+        <% } %>
+        <% for (let evidence of mystery.evidences){ %>
+            <div class="card mb-3">        
+                <div class="card-body">
+                    <h3><%= evidence.title %></h3>
+                    <h6 class="card-subtitle mb-2 text-muted">By <%= evidence.author.username %></h6>
+                    <p>Conclusion: <%= evidence.conclusion %></p>
+                    <p>Evidence: <%= evidence.body %></p>
+                    <% for (let evidenceImg of evidence.images){ %>
+                        <img class="img-thumbnail evidence-thumbnail" src="<%= evidenceImg.url %>">
+                    <% } %>
+                    <% if(currentUser && evidence.author.equals(currentUser._id)){ %>
+                        <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+<script src="/js/pageMap.js"></script>
