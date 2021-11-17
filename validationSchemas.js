@@ -48,3 +48,10 @@ module.exports.evidenceSchema = Joi.object({
     }
     ).required()
 });
+
+module.exports.spookinessSchema = Joi.object({
+    spookiness: Joi.object({
+        value: Joi.number().integer().min(1).max(5).required()
+    }
+    ).required()
+});

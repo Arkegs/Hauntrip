@@ -7,6 +7,7 @@ const map = new mapboxgl.Map({
 });
 
 map.addControl(new mapboxgl.NavigationControl());
+
 map.on('click', (e) => {
     let markers = document.getElementsByClassName('mapboxgl-marker mapboxgl-marker-anchor-center');
     document.getElementById('location').value = e.lngLat.lng + ',' + e.lngLat.lat;

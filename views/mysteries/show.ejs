@@ -4,7 +4,6 @@
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
     const mystery = <%-JSON.stringify(mystery)%>;
 </script>
-
 <div class="row">
     <div class="col-6">
         <div class="card mb-3">
@@ -12,7 +11,12 @@
             <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1636751000/Hauntrip/unavailable_g5kbfo.png' %>" class="card-img-top" alt="...">
             <div class="card-body">
                 <h5 class="card-title"><%= mystery.title %></h5>
-                <p class="starability-result" data-rating="3"></p>
+                <p> Spookiness: </p>
+                <span>
+                    <% for(let a=1; a<=5; a++){ %>
+                        <span class="<%= (a <= mystery.spookiness) ? 'star-rated' : 'star-unrated' %>" >&#128123;</span>
+                    <% } %>
+                </span>
                 <p class="card-text"><%= mystery.description %></p>
                 <p class="card-text text-muted"><%= mystery.location %></p>
                 <p class="card-text text-muted">By <%= mystery.author.username %></p>
@@ -33,12 +37,10 @@
         <% if(currentUser){ %>
             <h2>Is it scary?</h2>
                 <div class="mb-3">
-                    <form action="" class="star-form" method="POST">
-                        <button type="submit" name="spookiness" value="5">&#9733;</button>
-                        <button type="submit" name="spookiness" value="4">&#9733;</button>
-                        <button type="submit" name="spookiness" value="3">&#9733;</button>
-                        <button type="submit" name="spookiness" value="2">&#9733;</button>
-                        <button type="submit" name="spookiness" value="1">&#9733;</button>
+                    <form action="/mysteries/<%= mystery._id %>/rating" class="star-form" method="POST">
+                        <% for(let a=5; a>0; a--){ %>
+                        <button type="submit" name="spookiness" value="<%= a %>" class="<% if(a <= userSpookinessValue){%>voted<%}%>" >&#128123;</button>
+                        <% } %>
                     </form>
                 </div>  
             </form>

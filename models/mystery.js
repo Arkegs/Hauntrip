@@ -26,7 +26,10 @@ const MysterySchema = new Schema({
     },
     category: String,
     credibility: Number,
-    spookiness: Number,
+    spookiness: {
+        type: Number,
+        default: 0
+    },
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'

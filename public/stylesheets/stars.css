@@ -7,15 +7,34 @@
 .star-form button {
     border: 0;
     background: transparent;
+    text-shadow: 0 0 0 rgb(31, 32, 31);
+    color:transparent;
     font-size: 1.5em;
     margin: 0;
     padding: 0;
 }
 
 .star-form button:hover{
-    color: rgb(236, 179, 22);
+    color: transparent;
+    text-shadow: 0 0 0 rgb(236, 179, 22);
 }
 
 .star-form button:hover ~ button {
+    color: transparent;
+    text-shadow: 0 0 0 rgb(236, 179, 22);
+}
+
+.star-form .voted{
     color: rgb(236, 179, 22);
+}
+
+.star-rated{
+    color: rgb(236, 179, 22);
+    font-size: 1.5em;
+}
+
+.star-unrated{
+    color: transparent;
+    text-shadow: 0 0 0 rgb(31, 32, 31);
+    font-size: 1.5em;
 }

@@ -1,4 +1,4 @@
-const { mysterySchema, updateMysterySchema, evidenceSchema } = require('./validationSchemas.js');
+const { mysterySchema, updateMysterySchema, evidenceSchema, spookinessSchema } = require('./validationSchemas.js');
 const ExpressError = require('./utils/ExpressError');
 const Mystery = require('./models/mystery');
 const Evidence = require('./models/evidence');
@@ -55,7 +55,17 @@ module.exports.isEvidenceAuthor = async(req, res, next) => {
 module.exports.validateEvidence = (req, res, next) => {
     const { error } = evidenceSchema.validate(req.body);
     if(error){
-        console.log("Cago en la validacion");
+        const msg = error.details.map(el => el.message).join('.');
+        throw new ExpressError(msg, 400);
+    } else{
+        next();
+    }
+}
+
+module.exports.validateSpookiness = (req, res, next) =>{
+    console.log(req.body);
+    const { error } = spookinessSchema.validate({spookiness: {value: req.body.spookiness}});
+    if(error){
         const msg = error.details.map(el => el.message).join('.');
         throw new ExpressError(msg, 400);
     } else{

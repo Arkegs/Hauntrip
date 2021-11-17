@@ -4,8 +4,8 @@ const mysteries = require('../controllers/mysteries');
 const catchAsync = require('../utils/catchAsync');
 const Mystery = require('../models/mystery');
 const ExpressError = require('../utils/ExpressError');
-const { mysterySchema } = require('../validationSchemas.js');
-const { isLoggedIn, isAuthor, validateMystery, validateUpdateMystery } = require('../middleware');
+const { mysterySchema, spokinessSchema } = require('../validationSchemas.js');
+const { isLoggedIn, isAuthor, validateMystery, validateUpdateMystery, validateSpookiness } = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
@@ -25,6 +25,8 @@ router.route('/:id')
     .patch(isLoggedIn, isAuthor, catchAsync(mysteries.deleteImage));
 
 router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(mysteries.renderEditForm));
+
+router.post('/:id/rating', isLoggedIn, validateSpookiness, catchAsync(mysteries.rateMystery));
 
 
 module.exports = router;
