@@ -18,8 +18,18 @@ const evidenceSchema = new Schema({
         ref: 'User'
     },
     images: [ImageSchema],
-    conclusion: String,
-    credibility: Number
+    conclusion: {type: String, enum: ['real','fake']},
+    helpfulness: {
+        type: Number,
+        default: 0
+    },
+    expgiven: {
+        type: Number,
+        default: 0
+    }
+},
+{
+    timestamps: { createdAt: true, updatedAt: false }
 });
 
 module.exports = mongoose.model("Evidence", evidenceSchema);

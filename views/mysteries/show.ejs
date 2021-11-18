@@ -48,7 +48,14 @@
             <form class="mb-3 validated-form" action="/mysteries/<%= mystery._id %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="conclusion">Mystery credibility</label>
-                    <input class="form-range" type="range" min="1" max="2" name="evidence[conclusion]" id="conclusion">
+                    <div>
+                        <input type="radio" id="conclusion1"
+                         name="evidence[conclusion]" value="real">
+                        <label for="contactChoice1">Real</label>
+                    
+                        <input type="radio" id="conclusion2"
+                         name="evidence[conclusion]" value="fake">
+                        <label for="contactChoice1">Fake</label>
                 </div>  
                 <div class="mb-3">
                     <label class="form-label" for="title">Evidence title</label>
@@ -80,6 +87,13 @@
                             <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
                     <% } %>
+                    <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>"  method="POST">
+                        <button type="submit" name="helpfulness" value="1" class="btn btn-sm btn-primary">Upvote</button>
+                    </form>
+                    <%= evidence.helpfulness %>
+                    <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>" method="POST">
+                        <button type="submit" name="helpfulness" value="-1" class="btn btn-sm btn-success">Downvote</button>
+                    </form>
                 </div>
             </div>
         <% } %>

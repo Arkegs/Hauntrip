@@ -13,6 +13,8 @@ const upload = multer({ storage });
 
 router.post('/', isLoggedIn, upload.array('images'), validateEvidence, catchAsync(evidence.createEvidence));
 
-router.delete('/:evidenceId', isLoggedIn, isEvidenceAuthor, catchAsync(evidence.deleteEvidenceImages), catchAsync(evidence.deleteEvidence));
+router.route('/:evidenceId')
+    .post(isLoggedIn, catchAsync(evidence.rateEvidence))
+    .delete(isLoggedIn, isEvidenceAuthor, catchAsync(evidence.deleteEvidenceImages), catchAsync(evidence.deleteEvidence));
 
 module.exports = router;

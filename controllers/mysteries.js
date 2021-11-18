@@ -23,7 +23,9 @@ module.exports.createMystery = async (req, res, next) => {
         query: mystery.geometry.coordinates
     }).send();
     mystery.location = location.body.features[0].context.pop().text + ', ' + location.body.features[0].context.pop().text;
-    mystery.image = { url: req.file.path, filename: req.file.filename };
+    if(mystery.image.length){
+        mystery.image = { url: req.file.path, filename: req.file.filename };
+    }
     mystery.author = req.user._id;
     await mystery.save();
     console.log(mystery);
@@ -119,6 +121,7 @@ module.exports.rateMystery = async (req, res) => {
 module.exports.deleteMystery = async (req, res) => {
     const { id } = req.params;
     await Mystery.findByIdAndDelete(id);
+    await Spookiness.deleteMany({mystery: id});
     req.flash('success', 'Mystery was successfully deleted');
     res.redirect('/mysteries');
 };
