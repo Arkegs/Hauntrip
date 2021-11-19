@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Mystery = require('../models/mystery');
 
 module.exports.renderRegister = (req, res) => {
     res.render('users/register');
@@ -6,8 +7,8 @@ module.exports.renderRegister = (req, res) => {
 
 module.exports.register = async (req, res, next) => {
     try{
-        const {email, username, password} = req.body;
-        const user = new User({email, username});
+        const {email, username, password, birthdate} = req.body;
+        const user = new User({email, username, birthdate});
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err =>{
             if(err) return next(err);
@@ -36,3 +37,14 @@ module.exports.logout = (req, res) => {
     req.flash('success', 'You are logged out. Good luck!');
     res.redirect('/mysteries');
 };
+
+module.exports.showUser = async (req, res) => {
+    const userData = await User.findOne({username: req.params.username});
+    const userMysteries = await Mystery.find({author: userData._id}).limit(10).sort({createdAt: -1}).select('title image').exec();
+    if(!userData){
+        req.flash('error', 'User not found');
+        return res.redirect('/mysteries');
+    }
+    console.log(userMysteries);
+    res.render('users/show', { userData, userMysteries });
+}

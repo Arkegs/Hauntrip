@@ -1,5 +1,6 @@
 const Mystery = require('../models/mystery');
 const Evidence = require('../models/evidence');
+const User = require('../models/user');
 const Helpfulness = require('../models/helpfulness');
 const { ObjectId } = require('mongodb');
 const { cloudinary } = require('../cloudinary');
@@ -52,8 +53,20 @@ module.exports.rateEvidence = async (req, res) => {
                 throw(err);
             }else{
                 newValue = Math.round(results[0].total)
-                console.log(newValue);
-                await Evidence.findByIdAndUpdate(evidenceId, {helpfulness: newValue});
+                const updatedEvidence = await Evidence.findByIdAndUpdate(evidenceId, {helpfulness: newValue});
+                //If evidence is considered helpful, experience points are given both to evidence author and mystery author
+                if(updatedEvidence.expgiven === 0 && newValue === 5){
+                    await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 5});
+                    await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 5}});
+                    const mysteryAuthor = await Mystery.findOne({_id: id}).select('author');
+                    await User.findByIdAndUpdate(mysteryAuthor.author, {$inc: {exp: 2}});
+                }
+                //If evidence is VERY helpful, bonus experience points are given to evidence author
+                if(updatedEvidence.expgiven === 5 && newValue === 10){
+                    await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 15});
+                    await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 10}});
+                }
+                //Helpful evidences will impact on Mystery credibility
             }
         }
     );

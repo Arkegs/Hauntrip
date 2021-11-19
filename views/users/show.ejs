@@ -1,0 +1,16 @@
+<% layout('./layouts/boilerplate') %>
+
+<div class="card mb-3">
+   <h1>USER MOTHERFUCKER</h1>
+   <p><%= userData.username %></p>
+   <p><%= userData.email %></p> 
+   <p><%= userData.birthdate %></p>
+   <p>Experience: <%= userData.exp %></p> 
+</div>
+
+<% for(let mystery of userMysteries){ %>
+    <div class="card mb-3">
+        <img style="width:100px; height: 100px;" src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1636751000/Hauntrip/unavailable_g5kbfo.png' %>" alt="">
+        <a href="/mysteries/<%= mystery._id %>"><%= mystery.title %></a>
+    </div>
+<% } %>

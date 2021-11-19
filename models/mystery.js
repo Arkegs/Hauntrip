@@ -3,7 +3,7 @@ const Evidence = require('./evidence');
 const user = require('./user');
 const Schema = mongoose.Schema;
 
-const opts = { toJSON: {virtuals: true}};
+const opts = { toJSON: {virtuals: true}, timestamps: { createdAt: true, updatedAt: false }};
 
 const MysterySchema = new Schema({
     title: String,

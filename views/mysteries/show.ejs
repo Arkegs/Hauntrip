@@ -19,7 +19,7 @@
                 </span>
                 <p class="card-text"><%= mystery.description %></p>
                 <p class="card-text text-muted"><%= mystery.location %></p>
-                <p class="card-text text-muted">By <%= mystery.author.username %></p>
+                <p class="card-text text-muted">By <a href="/user/<%= mystery.author.username %>"><%= mystery.author.username %></a></p>
                 <a href="/mysteries" class="btn btn-primary">Go back</a>
                 <% if(currentUser && mystery.author.equals(currentUser._id)){ %>
                 <a href="/mysteries/<%= mystery._id %>/edit" class="btn btn-primary">Edit</a>
@@ -76,7 +76,7 @@
             <div class="card mb-3">        
                 <div class="card-body">
                     <h3><%= evidence.title %></h3>
-                    <h6 class="card-subtitle mb-2 text-muted">By <%= evidence.author.username %></h6>
+                    <h6 class="card-subtitle mb-2 text-muted">By <a href="/user/<%= evidence.author.username %>"><%= evidence.author.username %></a></h6>
                     <p>Conclusion: <%= evidence.conclusion %></p>
                     <p>Evidence: <%= evidence.body %></p>
                     <% for (let evidenceImg of evidence.images){ %>
