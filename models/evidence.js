@@ -26,6 +26,10 @@ const evidenceSchema = new Schema({
     expgiven: {
         type: Number,
         default: 0
+    },
+    isHelpful: {
+        type: Boolean,
+        default: false
     }
 },
 {

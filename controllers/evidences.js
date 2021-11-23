@@ -12,10 +12,8 @@ module.exports.createEvidence = async (req, res) => {
     evidence.author = req.user._id;
     evidence.images = req.files.map(f => ({ url: f.path, filename: f.filename}));
     mystery.evidences.push(evidence);
-    console.log("Hasta aqui vamos bien");
     await evidence.save();
     await mystery.save();
-    console.log(evidence);
     req.flash('success', 'Succesfully posted new Evidence');
     res.redirect(`/mysteries/${mystery._id}`); 
 };
@@ -35,7 +33,7 @@ module.exports.rateEvidence = async (req, res) => {
     } else{
        await Helpfulness.findByIdAndUpdate( answer._id, { value: req.body.helpfulness });
     }
-    //Updates Evidence total helpfulness
+    //Updates Evidence total helpfulness value
     await Helpfulness.aggregate([
         {
             $match: {
@@ -67,6 +65,29 @@ module.exports.rateEvidence = async (req, res) => {
                     await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 10}});
                 }
                 //Helpful evidences will impact on Mystery credibility
+                if(newValue >= 3 && newValue <= 6){
+                    const mysteryId = ObjectId(req.params.id);
+                    if(newValue >= 5){
+                        var isHelpful = true;
+                    } 
+                    if(newValue <= 4){
+                        var isHelpful = false;
+                    }
+                    await Evidence.findByIdAndUpdate(evidenceId, { isHelpful });
+                    const mysteryEvidences = await Mystery.findOne({_id: id}).populate({
+                        path: 'evidences',
+                        select: 'conclusion',
+                        match: { isHelpful: true }
+                    }).select('evidences').exec();
+                    const realTotal = mysteryEvidences.evidences.reduce((acc, current) => {
+                        if(current.conclusion === 'real'){ 
+                            return acc + 1
+                        }
+                        return acc;
+                    }, 0);
+                    const ratio = Math.round((realTotal/mysteryEvidences.evidences.length)*100);
+                    await Mystery.findByIdAndUpdate(id, {credibility: ratio});
+                }
             }
         }
     );

@@ -17,6 +17,7 @@
                         <span class="<%= (a <= mystery.spookiness) ? 'star-rated' : 'star-unrated' %>" >&#128123;</span>
                     <% } %>
                 </span>
+                <p class="card-text">Credibility: <%= mystery.credibility %></p>
                 <p class="card-text"><%= mystery.description %></p>
                 <p class="card-text text-muted"><%= mystery.location %></p>
                 <p class="card-text text-muted">By <a href="/user/<%= mystery.author.username %>"><%= mystery.author.username %></a></p>

@@ -25,7 +25,10 @@ const MysterySchema = new Schema({
         }
     },
     category: String,
-    credibility: Number,
+    credibility: {
+        type: Number,
+        default: 0
+    },    
     spookiness: {
         type: Number,
         default: 0
