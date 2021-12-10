@@ -73,12 +73,14 @@ module.exports.rateEvidence = async (req, res) => {
                     if(newValue <= 4){
                         var isHelpful = false;
                     }
+                    //Search all helpful evidences
                     await Evidence.findByIdAndUpdate(evidenceId, { isHelpful });
                     const mysteryEvidences = await Mystery.findOne({_id: id}).populate({
                         path: 'evidences',
                         select: 'conclusion',
                         match: { isHelpful: true }
                     }).select('evidences').exec();
+                    //Calculates a ratio between real helpful evidences vs total helpful evidences
                     const realTotal = mysteryEvidences.evidences.reduce((acc, current) => {
                         if(current.conclusion === 'real'){ 
                             return acc + 1

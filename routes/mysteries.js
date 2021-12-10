@@ -18,6 +18,11 @@ router.route('/')
 
 router.get('/new', isLoggedIn, mysteries.renderNewForm);
 
+router.get('/search/spooky', mysteries.renderSpooky);
+router.get('/search/recent', mysteries.renderRecent);
+router.get('/search/credible', mysteries.renderCredibility);
+//router.get('/search/:mysteryName', mysteries.renderName);
+
 router.route('/:id')
     .get(catchAsync(mysteries.showMystery))
     .put(isLoggedIn, isAuthor, upload.single('image'), validateUpdateMystery, catchAsync(mysteries.updateMystery))

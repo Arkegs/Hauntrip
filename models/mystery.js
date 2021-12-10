@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Evidence = require('./evidence');
 const user = require('./user');
 const Schema = mongoose.Schema;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const opts = { toJSON: {virtuals: true}, timestamps: { createdAt: true, updatedAt: false }};
 
@@ -60,5 +61,7 @@ MysterySchema.virtual('properties.popUpMarkup').get(function(){
     <strong><a href="/mysteries/${this._id}">${this.title}</a></strong>
     <p>${this.description.substring(0,40)}...</p>`
 });
+
+MysterySchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Mystery', MysterySchema);

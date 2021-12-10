@@ -1,5 +1,6 @@
 const Mystery = require('../models/mystery');
 const Spookiness = require('../models/spookiness');
+const helpfulness = require('../models/helpfulness');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken: mapBoxToken});
@@ -9,6 +10,52 @@ const { ObjectId } = require('mongodb');
 module.exports.index = async (req, res) => {
     const mysteries = await Mystery.find({}) 
     res.render('mysteries/index', { mysteries });
+};
+
+module.exports.renderSpooky = async(req, res) => {
+    let pageNum = 1
+    if(req.query.page){
+        pageNum = parseInt(req.query.page);
+    }
+    if(!pageNum){
+        res.redirect('/mysteries');
+    }
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {spookiness: 'desc'}});
+    if(mysteries.docs.length < 1){
+        res.redirect('/mysteries');
+    }
+    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Spookiest mysteries' });
+};
+
+module.exports.renderRecent = async(req, res) => {
+    let pageNum = 1
+    if(req.query.page){
+        pageNum = parseInt(req.query.page);
+    }
+    if(!pageNum){
+        res.redirect('/mysteries');
+    }
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {createdAt: 'desc'}});
+    if(mysteries.docs.length < 1){
+        res.redirect('/mysteries');
+    }
+    console.log(mysteries);
+    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most recent mysteries' });
+};
+
+module.exports.renderCredibility = async(req, res) => {
+    let pageNum = 1
+    if(req.query.page){
+        pageNum = parseInt(req.query.page);
+    }
+    if(!pageNum){
+        res.redirect('/mysteries');
+    }
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {credibility: 'desc'}});
+    if(mysteries.docs.length < 1){
+        res.redirect('/mysteries');
+    }
+    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most credible mysteries' });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -34,6 +81,7 @@ module.exports.createMystery = async (req, res, next) => {
 };
 
 module.exports.showMystery = async (req, res) => {
+    //Pending: Change this in order to load 5 evidences. Create Evidence Loader (Pagination)
     const mystery = await Mystery.findById(req.params.id).populate({
         path: 'evidences',
         populate:{
