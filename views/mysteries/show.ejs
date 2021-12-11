@@ -73,6 +73,7 @@
                 <button>Submit</button>
             </form>
         <% } %>
+        <div id="evidences-container">
         <% for (let evidence of mystery.evidences){ %>
             <div class="card mb-3">        
                 <div class="card-body">
@@ -98,7 +99,10 @@
                 </div>
             </div>
         <% } %>
+        </div>
+        <button id="loadEvidences" class="btn btn-lg btn-primary">Load more</button>
     </div>
 </div>
 
 <script src="/js/pageMap.js"></script>
+<script src="/js/loader.js"></script>

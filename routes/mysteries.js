@@ -29,6 +29,8 @@ router.route('/:id')
     .delete(isLoggedIn, isAuthor, catchAsync(mysteries.deleteMystery))
     .patch(isLoggedIn, isAuthor, catchAsync(mysteries.deleteImage));
 
+router.get('/:id/load', catchAsync(mysteries.loadMysteryEvidences));
+
 router.get('/:id/edit', isLoggedIn, isAuthor, catchAsync(mysteries.renderEditForm));
 
 router.post('/:id/rating', isLoggedIn, validateSpookiness, catchAsync(mysteries.rateMystery));

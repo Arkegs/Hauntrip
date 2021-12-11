@@ -84,10 +84,15 @@ module.exports.showMystery = async (req, res) => {
     //Pending: Change this in order to load 5 evidences. Create Evidence Loader (Pagination)
     const mystery = await Mystery.findById(req.params.id).populate({
         path: 'evidences',
+        options:{
+            limit: 5,
+            sort: {createdAt: -1}
+        },
         populate:{
             path: 'author'
         }
     }).populate('author');
+    console.log(mystery.evidences);
     if(!mystery){
         req.flash('error', 'Mystery not found');
         return res.redirect('/mysteries');
@@ -102,6 +107,30 @@ module.exports.showMystery = async (req, res) => {
     }
     res.render('mysteries/show', { mystery });
 };
+
+module.exports.loadMysteryEvidences = async (req, res) =>{
+    const mysteryQuery = await Mystery.findById(req.params.id).populate({
+        path: 'evidences',
+        options:{
+            skip: parseInt(req.query.skip),
+            limit: 5,
+            sort: {createdAt: -1}
+        },
+        populate:{
+            path: 'author'
+        }
+    }).populate('author').exec();
+    if(req.user){
+        const mystery = {
+            mystery: mysteryQuery,
+            currentUser: req.user._id.toString()
+        }
+        console.log(mystery);
+        return res.send(mystery);
+    }
+    const mystery = mysteryQuery;
+    return res.send(mystery);
+}
 
 module.exports.renderEditForm = async (req, res) => {
     const mystery = await Mystery.findById(req.params.id);
