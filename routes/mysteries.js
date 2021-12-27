@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mysteries = require('../controllers/mysteries');
+const evidence = require('../controllers/evidences');
 const catchAsync = require('../utils/catchAsync');
 const Mystery = require('../models/mystery');
 const ExpressError = require('../utils/ExpressError');
@@ -10,7 +11,7 @@ const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
 
-
+router.get('/:id/newevidence', isLoggedIn, evidence.renderNewForm);
 
 router.route('/')
     .get(catchAsync(mysteries.index))

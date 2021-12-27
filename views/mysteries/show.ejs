@@ -44,7 +44,7 @@
                 <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="...">
             </div>
             <h4>Description</h4>
-            <p><%= mystery.description %></p>
+            <p style = 'white-space: pre-wrap'><%= mystery.description %></p>
             <% if(currentUser && mystery.author._id.equals(currentUser._id)){ %>
                 <div class="mystery-author-panel">
                     <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
@@ -56,56 +56,37 @@
         </div>
         <hr>
         <div class="evidence-block">
-            <% if(currentUser){ %>
             <div class="user-block">
                 <div class="spookiness-block">
-                    <h4>Was it scary? Rate it!</h4>
+                    <h6>Was it scary? Rate it!</h6>
                     <div class="mb-3">
                         <form action="/mysteries/<%= mystery._id %>/rating" class="star-form" method="POST">
-                            <% for(let a=5; a>0; a--){ %>
-                            <button type="submit" name="spookiness" value="<%= a %>" class="<% if(a <= userSpookinessValue){%>voted<%}%>" >&#128123;</button>
+                            <% if(currentUser){ %>
+                                <% for(let a=5; a>0; a--){ %>
+                                <button type="submit" name="spookiness" value="<%= a %>" class="<% if(a <= userSpookinessValue){%>voted<%}%>" >&#128123;</button>
+                                <% } %>
+                            <% } else{ %>
+                                <% for(let a=5; a>0; a--){ %>
+                                    <button type="submit" name="spookiness" value="<%= a %>" >&#128123;</button>
+                                    <% } %>
                             <% } %>
                         </form>
                     </div>  
                 </div>    
                 <div class="post-evidence">
-                    <h4>Leave some evidence!</h4>
-                    <form class="mb-3 validated-form" action="/mysteries/<%= mystery._id %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
-                        <div class="mb-3">
-                            <label class="form-label" for="conclusion">Mystery credibility</label>
-                            <div>
-                                <input type="radio" id="conclusion1"
-                                 name="evidence[conclusion]" value="real">
-                                <label for="contactChoice1">Real</label>
-                            
-                                <input type="radio" id="conclusion2"
-                                 name="evidence[conclusion]" value="fake">
-                                <label for="contactChoice1">Fake</label>
-                        </div>  
-                        <div class="mb-3">
-                            <label class="form-label" for="title">Evidence title</label>
-                            <input class="form-control" type="text" name="evidence[title]" id="title" required/>
-                        </div>  
-                        <div class="mb-3">
-                            <label class="form-label" for="body">Evidence description</label>
-                            <textarea class="form-control" name="evidence[body]" id="body" cols="30" rows="4" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="images">Images</label>
-                            <input type="file" name="images" id="images" multiple />
-                        </div>
-                        <button>Submit</button>
-                    </form>
+                    <h6>Do you know something about this mystery? Leave some evidence!</h6>
+                    <a class="btn btn-primary" href="/mysteries/<%= mystery._id %>/newevidence">Post evidence</a>
                 </div>
             </div>    
-            <% } %>
+           
             <div id="evidences-container">
                 <h3>Evidences</h3>
+                <hr>
                 <% for (let evidence of mystery.evidences){ %>
                     <div class="single-evidence <% if(evidence.helpfulness >= 5){ %> helpful <% } %>">        
                             <h4><%= evidence.title %></h4>
                             <h6 class="author-name">By <a href="/user/<%= evidence.author.username %>"><%= evidence.author.username %></a></h6>
-                            <p>Conclusion: <%= evidence.conclusion %></p>
+                            <p>Conclusion: <%= evidence.conclusion.charAt(0).toUpperCase() + evidence.conclusion.slice(1) %></p>
                             <p>Evidence: <%= evidence.body %></p>
                             <% for (let evidenceImg of evidence.images){ %>
                                 <img class="img-thumbnail evidence-thumbnail" src="<%= evidenceImg.url %>">
@@ -129,10 +110,15 @@
                             <% if(evidence.helpfulness >= 5){ %> 
                                 <p class="helpfulMsg">This evidence is considered Helpful!</p> 
                             <% } %>
+                            <p class="evidence-date"><%= evidence.createdAt.getDate() + '/' + evidence.createdAt.getMonth() + '/' + evidence.createdAt.getFullYear() %></p> 
                     </div>
                 <% } %>
             </div>
-            <button id="loadEvidences" class="btn btn-lg btn-primary loadButton">Load more</button>
+            <% if(mystery.evidences.length < 1){ %>
+                <p class="loadButton">This mystery has no evidences yet.</p>
+            <% } else{ %>
+                <button id="loadEvidences" class="btn btn-lg btn-primary loadButton">Load more</button>
+            <% } %>
         </div>
     </div>
 </div>

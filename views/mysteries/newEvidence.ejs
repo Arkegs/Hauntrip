@@ -1,0 +1,37 @@
+<% layout('./layouts/boilerplate') %>
+
+<div class="user-panel">
+    <img src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <div class="panel">  
+        <h1>New Evidence</h1>
+        <form class="mb-3 validated-form" action="/mysteries/<%= mystery %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="conclusion">Mystery credibility</label>
+                <div>
+                    <input type="radio" id="conclusion1"
+                    name="evidence[conclusion]" value="real">
+                    <label for="contactChoice1">Real</label>
+                
+                    <input type="radio" id="conclusion2"
+                    name="evidence[conclusion]" value="fake">
+                    <label for="contactChoice1">Fake</label>
+            </div>  
+            <div class="mb-3">
+                <label class="form-label" for="title">Evidence title</label>
+                <input class="form-control" type="text" name="evidence[title]" id="title" required/>
+            </div>  
+            <div class="mb-3">
+                <label class="form-label" for="body">Evidence description</label>
+                <textarea class="form-control" name="evidence[body]" id="body" cols="30" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="images">Images</label>
+                <input type="file" name="images" id="images" multiple />
+            </div>
+            <button>Submit</button>
+        </form>
+    </div>
+</div>
+
+</script>
+

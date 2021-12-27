@@ -27,7 +27,7 @@ module.exports.renderLogin = (req, res) =>{
 
 module.exports.login = (req, res) =>{
     req.flash('success', 'Welcome back!');
-    const redirectUrl = req.session.returnTo || '/mysteries';
+    const redirectUrl = '/mysteries';
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 };

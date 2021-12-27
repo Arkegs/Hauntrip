@@ -1,6 +1,7 @@
 const Mystery = require('../models/mystery');
 const Spookiness = require('../models/spookiness');
-const helpfulness = require('../models/helpfulness');
+const Helpfulness = require('../models/helpfulness');
+const Evidence = require('../models/evidence');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken: mapBoxToken});
@@ -81,7 +82,6 @@ module.exports.createMystery = async (req, res, next) => {
 };
 
 module.exports.showMystery = async (req, res) => {
-    //Pending: Change this in order to load 5 evidences. Create Evidence Loader (Pagination)
     const mystery = await Mystery.findById(req.params.id).populate({
         path: 'evidences',
         options:{
@@ -158,7 +158,7 @@ module.exports.updateMystery = async (req, res) => {
 module.exports.rateMystery = async (req, res) => {
     const { id } = req.params;
     mongooseId = ObjectId(id);
-    //If user has not rated yet, creates a new rating on DB
+    //If user has not rated this mystery yet, a new rating is created on DB
     const answer = await Spookiness.findOne({author: req.user._id, mystery:id}).exec();
     if(!answer){
        const spookiness = new Spookiness();
@@ -197,6 +197,30 @@ module.exports.rateMystery = async (req, res) => {
 
 module.exports.deleteMystery = async (req, res) => {
     const { id } = req.params;
+    const deletedMystery = await Mystery.findById(id).exec();
+    //If Mystery has related Evidence, it must be deleted too
+    if(deletedMystery.evidences.length > 0){
+        console.log(deletedMystery.evidences);
+        //Must check if Evidence has photos. If so, remove them from Cloudinary
+        for(let evidence of deletedMystery.evidences){
+            deletedEvidence = await Evidence.findById(evidence).exec();
+            if(deletedEvidence.images.length > 0){
+                let toDestroy = [];
+                for(let evidenceImage of deletedEvidence.images){
+                    toDestroy.push(evidenceImage.filename);
+                }
+                await cloudinary.api.delete_resources(toDestroy);
+            }
+            //All upvotes from every Evidence is deleted too    
+            await Helpfulness.deleteMany({evidence: evidence});
+            //Finally, each Evidence is deleted
+            await Evidence.findByIdAndDelete(evidence).exec();
+        }
+    }
+    //Once the Mystery has no longer related Evidence, it will be deleted starting on its image
+    if(deletedMystery.image.filename){
+        await cloudinary.uploader.destroy(deletedMystery.image.filename);
+    }
     await Mystery.findByIdAndDelete(id);
     await Spookiness.deleteMany({mystery: id});
     req.flash('success', 'Mystery was successfully deleted');

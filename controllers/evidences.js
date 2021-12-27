@@ -5,6 +5,10 @@ const Helpfulness = require('../models/helpfulness');
 const { ObjectId } = require('mongodb');
 const { cloudinary } = require('../cloudinary');
 
+module.exports.renderNewForm = (req, res) =>{
+    res.render('mysteries/newEvidence', {mystery: req.params.id});
+}
+
 module.exports.createEvidence = async (req, res) => {
     const mystery = await Mystery.findById(req.params.id);
     const evidence = new Evidence(req.body.evidence);

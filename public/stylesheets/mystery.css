@@ -7,6 +7,7 @@ h2, h3, h4, h5, p{
     display: flex;
     justify-content: center;
     width: 100%;
+    margin-bottom: 40px;
 }
 
 .mystery-summary{
@@ -72,11 +73,34 @@ h2, h3, h4, h5, p{
 .mystery-author-panel{
     display: flex;
     flex-direction: row;
-    margin: 10px 0;
+    margin: 15px 0 0;
 }
 
 .mystery-author-panel a, .mystery-author-panel button{
     margin-right: 10px;
+}
+
+.user-block{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.user-block .spookiness-block{
+    width: 40%;
+}
+
+.user-block .post-evidence{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+}
+
+.user-block h6{
+    margin-bottom: 10px;
+    font-size: 1.1em;
 }
 
 .evidence-block{
@@ -171,6 +195,10 @@ h2, h3, h4, h5, p{
     margin-bottom: 5px;
 }
 
+.evidence-date{
+    font-size: 0.8em;
+}
+
 .loadButton{
     display: block;
     margin: 20px auto;
@@ -200,5 +228,18 @@ h2, h3, h4, h5, p{
     .evidence-thumbnail{
         max-width: 50px;
         max-height: 50px;
+    }
+
+    .user-block{
+        flex-direction: column;
+    }
+    .user-block .spookiness-block{
+        width: 100%;
+        margin: 20px 0;
+    }
+    
+    .user-block .post-evidence{
+        width: 100%;
+        margin-bottom: 30px 0;
     }
 }

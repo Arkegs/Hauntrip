@@ -35,7 +35,6 @@
                     <a class="paginate-number " href="?page=<%= currentPage-1 %>">&lt;</a>
                 <% } %>
                 <a class="paginate-number <% if(currentPage === 1){ %> selected-page <% } %>" href="?page=1">1</a>
-
                 <% if(currentPage > 2 && totalPages > 5){ %>
                     <p>...</p>
                 <% } var diff = 0 %>
@@ -48,8 +47,8 @@
                 <% if(currentPage + 2 < totalPages - 1){ %>
                     <p>...</p>
                 <% } %>
-                <a class="paginate-number <% if(currentPage === totalPages){ %> selected-page <% } %>" href="?page=<%= totalPages %>"><%= totalPages%></a>
                 <% if(currentPage < totalPages){ %>
+                    <a class="paginate-number <% if(currentPage === totalPages){ %> selected-page <% } %>" href="?page=<%= totalPages %>"><%= totalPages%></a>
                     <a class="paginate-number" href="?page=<%= currentPage+1 %>">&gt;</a>
                 <% } %>
             </div>
