@@ -1,5 +1,6 @@
 body{
     background-color:rgb(231, 231, 231);
+    min-height: 100vh;
 }
 
 #map{ 
@@ -76,6 +77,7 @@ body{
 
 .main-content{
     margin: 10px;
+    margin-left: 30px;
     width: 80%;
 }
 
@@ -122,16 +124,36 @@ body{
     height: 100%;
 }
 
-.mystery-photo img{
-    width: 98%;
+.mystery-photo .mystery-photo-img-container{
+    width: 100%;
     height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center; 
+    background-size: cover;
 }
+
+.mystery-photo .mystery-photo-img-container img{
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
 
 .mystery-photo-caption{
     margin-top: 20px;
 }
 
-.mystery-photo-caption small, .mystery-photo-caption h5{
+.mystery-photo-caption h5{
+    padding-bottom: 2px;
+}
+
+.mystery-photo-caption .text-muted, .mystery-photo-caption h5{
+    display: block;
     white-space: nowrap;
     max-width: 100%;
     margin: 0;
@@ -188,6 +210,9 @@ body{
     .main{
         flex-direction: column;
     }
+    .main-content{
+        margin: 10px;
+    }
     .side-menu{
         width: 100%;
         align-self: flex-start;
@@ -212,10 +237,15 @@ body{
 }
 
 
-
 @media screen and (max-width: 770px) {
     .photo-container{
         width: 90%;
         padding-top: 90%;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .mystery-photo-caption{
+        margin-top: 5px;
     }
 }

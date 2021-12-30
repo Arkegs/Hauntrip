@@ -6,6 +6,20 @@
     const mystery = <%-JSON.stringify(mystery)%>;
 </script>
 
+<!-- The Modal -->
+<div id="hauntrip-modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 id="headerTitle">...</h4>
+            <span class="close">&times;</span>
+        </div>
+        <div id="modal-content-inner">
+        <p>...</p>
+      </div>
+    </div>
+</div>
+
 <div class="mystery-block">
     <div class="mystery-summary">
         <div class="mystery-summary-data">
@@ -44,15 +58,14 @@
                 <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="...">
             </div>
             <h4>Description</h4>
-            <p style = 'white-space: pre-wrap'><%= mystery.description %></p>
-            <% if(currentUser && mystery.author._id.equals(currentUser._id)){ %>
+            <p style = 'white-space: pre-wrap; margin-top: 20px;'><%= mystery.description %></p>
                 <div class="mystery-author-panel">
-                    <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
-                    <form action="/mysteries/<%= mystery._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete Mystery</button>
-                    </form>
+                    <% if(currentUser && mystery.author._id.equals(currentUser._id)){ %>
+                        <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
+                        <button onClick="deleteMysteryModal('/mysteries/<%= mystery._id %>?_method=DELETE')" class="btn btn-danger">Delete Mystery</button>
+                    <% } %>
+                    <button onClick="reportMysteryModal('/mysteries/<%= mystery._id %>')" class="transparent-btn" style="margin: 0;"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
                 </div>
-            <% } %>
         </div>
         <hr>
         <div class="evidence-block">
@@ -89,7 +102,9 @@
                             <p>Conclusion: <%= evidence.conclusion.charAt(0).toUpperCase() + evidence.conclusion.slice(1) %></p>
                             <p>Evidence: <%= evidence.body %></p>
                             <% for (let evidenceImg of evidence.images){ %>
-                                <img class="img-thumbnail evidence-thumbnail" src="<%= evidenceImg.url %>">
+                                <a class="evidence-thumbnail" href="<%= evidenceImg.url %>" target="_blank">
+                                    <img class="img-thumbnail" src="<%= evidenceImg.url %>">
+                                </a>
                             <% } %>
                             <div class="evidence-panel">
                                 <div class="evidence-upvote">
@@ -101,11 +116,12 @@
                                         <button type="submit" name="helpfulness" value="-1" class="downvote-arrow"></button>
                                     </form>
                                 </div>
-                                <% if(currentUser && evidence.author.equals(currentUser._id)){ %>
-                                    <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE" method="POST">
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                <% } %>
+                                <div class="evidence-report">
+                                    <button onClick="reportModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
+                                    <% if(currentUser && evidence.author.equals(currentUser._id)){ %>
+                                    <button onClick="deleteEvidenceModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE')" class="transparent-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    <% } %>
+                                </div>
                             </div>
                             <% if(evidence.helpfulness >= 5){ %> 
                                 <p class="helpfulMsg">This evidence is considered Helpful!</p> 
@@ -123,107 +139,6 @@
     </div>
 </div>
 
-
-
-<!-- <div class="row">
-    <div class="col-6">
-        <div class="card mb-3">
-            <div id="map"></div>
-            <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title"><%= mystery.title %></h5>
-                <p> Spookiness: </p>
-                <span>
-                    <% for(let a=1; a<=5; a++){ %>
-                        <span class="<%= (a <= mystery.spookiness) ? 'star-rated' : 'star-unrated' %>" >&#128123;</span>
-                    <% } %>
-                </span>
-                <p class="card-text">Credibility: <%= mystery.credibility %></p>
-                <p class="card-text"><%= mystery.description %></p>
-                <p class="card-text text-muted"><%= mystery.location %></p>
-                <p class="card-text text-muted">By <a href="/user/<%= mystery.author.username %>"><%= mystery.author.username %></a></p>
-                <a href="/mysteries" class="btn btn-primary">Go back</a>
-                <% if(currentUser && mystery.author.equals(currentUser._id)){ %>
-                <a href="/mysteries/<%= mystery._id %>/edit" class="btn btn-primary">Edit</a>
-                <form class="d-inline" action="/mysteries/<%= mystery._id %>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-                <% } %>
-            </div>
-            <div class="card-footer text-muted">
-                10 days ago
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <% if(currentUser){ %>
-            <h2>Is it scary?</h2>
-                <div class="mb-3">
-                    <form action="/mysteries/<%= mystery._id %>/rating" class="star-form" method="POST">
-                        <% for(let a=5; a>0; a--){ %>
-                        <button type="submit" name="spookiness" value="<%= a %>" class="<% if(a <= userSpookinessValue){%>voted<%}%>" >&#128123;</button>
-                        <% } %>
-                    </form>
-                </div>  
-            </form>
-            <h2>Leave some evidence!</h2>
-            <form class="mb-3 validated-form" action="/mysteries/<%= mystery._id %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="conclusion">Mystery credibility</label>
-                    <div>
-                        <input type="radio" id="conclusion1"
-                         name="evidence[conclusion]" value="real">
-                        <label for="contactChoice1">Real</label>
-                    
-                        <input type="radio" id="conclusion2"
-                         name="evidence[conclusion]" value="fake">
-                        <label for="contactChoice1">Fake</label>
-                </div>  
-                <div class="mb-3">
-                    <label class="form-label" for="title">Evidence title</label>
-                    <input class="form-control" type="text" name="evidence[title]" id="title" required/>
-                </div>  
-                <div class="mb-3">
-                    <label class="form-label" for="body">Evidence description</label>
-                    <textarea class="form-control" name="evidence[body]" id="body" cols="30" rows="4" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="images">Images</label>
-                    <input type="file" name="images" id="images" multiple />
-                </div>
-                <button>Submit</button>
-            </form>
-        <% } %>
-        <div id="evidences-container">
-        <% for (let evidence of mystery.evidences){ %>
-            <div class="card mb-3">        
-                <div class="card-body">
-                    <h3><%= evidence.title %></h3>
-                    <h6 class="card-subtitle mb-2 text-muted">By <a href="/user/<%= evidence.author.username %>"><%= evidence.author.username %></a></h6>
-                    <p>Conclusion: <%= evidence.conclusion %></p>
-                    <p>Evidence: <%= evidence.body %></p>
-                    <% for (let evidenceImg of evidence.images){ %>
-                        <img class="img-thumbnail evidence-thumbnail" src="<%= evidenceImg.url %>">
-                    <% } %>
-                    <% if(currentUser && evidence.author.equals(currentUser._id)){ %>
-                        <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE" method="POST">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    <% } %>
-                    <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>"  method="POST">
-                        <button type="submit" name="helpfulness" value="1" class="btn btn-sm btn-primary">Upvote</button>
-                    </form>
-                    <%= evidence.helpfulness %>
-                    <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>" method="POST">
-                        <button type="submit" name="helpfulness" value="-1" class="btn btn-sm btn-success">Downvote</button>
-                    </form>
-                </div>
-            </div>
-        <% } %>
-        </div>
-        <button id="loadEvidences" class="btn btn-lg btn-primary">Load more</button>
-    </div>
-</div> -->
-
 <script src="/js/pageMap.js"></script>
 <script src="/js/loader.js"></script>
+<script src="/js/modal.js"></script>

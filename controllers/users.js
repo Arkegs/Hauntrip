@@ -48,3 +48,7 @@ module.exports.showUser = async (req, res) => {
     console.log(userMysteries);
     res.render('users/show', { userData, userMysteries });
 }
+
+module.exports.userHelp = (req, res) =>{
+    res.render('users/help');
+}

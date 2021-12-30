@@ -21,7 +21,7 @@ module.exports.renderSpooky = async(req, res) => {
     if(!pageNum){
         res.redirect('/mysteries');
     }
-    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {spookiness: 'desc'}});
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {spookiness: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
         res.redirect('/mysteries');
     }
@@ -36,7 +36,7 @@ module.exports.renderRecent = async(req, res) => {
     if(!pageNum){
         res.redirect('/mysteries');
     }
-    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {createdAt: 'desc'}});
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {createdAt: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
         res.redirect('/mysteries');
     }
@@ -52,7 +52,7 @@ module.exports.renderCredibility = async(req, res) => {
     if(!pageNum){
         res.redirect('/mysteries');
     }
-    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {credibility: 'desc'}});
+    const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {credibility: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
         res.redirect('/mysteries');
     }
@@ -71,7 +71,8 @@ module.exports.createMystery = async (req, res, next) => {
         query: mystery.geometry.coordinates
     }).send();
     mystery.location = location.body.features[0].context.pop().text + ', ' + location.body.features[0].context.pop().text;
-    if(mystery.image.length){
+    console.log(req.file);
+    if(req.file){
         mystery.image = { url: req.file.path, filename: req.file.filename };
     }
     mystery.author = req.user._id;
@@ -144,11 +145,12 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateMystery = async (req, res) => {
     const { id } = req.params;
     const mystery = await Mystery.findByIdAndUpdate(id, {... req.body.mystery});
+    console.log(req.file);
     if(req.file){
-        if(Object.keys(mystery.image).length !== 0){
+        if(mystery.image.filename){
             await cloudinary.uploader.destroy(mystery.image.filename);
         }
-        mystery.image = { url: req.file.path, filename: req.file.filename };    
+        mystery.image = { url: req.file.path, filename: req.file.filename };  
     }
     await mystery.save();
     req.flash('success', 'Succesfully edited the Mystery!');

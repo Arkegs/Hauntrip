@@ -18,7 +18,9 @@
                     <div class="photo-container">
                         <a class="mystery-photo-link" href="/mysteries/<%= mystery._id %>">
                             <div class="mystery-photo">
-                                <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>">
+                                <div class="mystery-photo-img-container" style="background-image: url(<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>)">
+                                    <!-- <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>"> -->
+                                </div>
                                 <div class="mystery-photo-caption">
                                     <h5><%= mystery.title %></h5>
                                     <small class="text-muted">
@@ -47,9 +49,11 @@
                 <% if(currentPage + 2 < totalPages - 1){ %>
                     <p>...</p>
                 <% } %>
-                <% if(currentPage < totalPages){ %>
+                <% if(currentPage <= totalPages){ %>
                     <a class="paginate-number <% if(currentPage === totalPages){ %> selected-page <% } %>" href="?page=<%= totalPages %>"><%= totalPages%></a>
+                    <% if(currentPage !== totalPages){ %>
                     <a class="paginate-number" href="?page=<%= currentPage+1 %>">&gt;</a>
+                    <% } %>
                 <% } %>
             </div>
         </div>

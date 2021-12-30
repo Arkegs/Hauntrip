@@ -115,7 +115,7 @@ app.use(
                 "blob:",
                 "data:",
                 "https://res.cloudinary.com/arkeg/", 
-                "https://images.unsplash.com",
+                "https://images.unsplash.com"
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },

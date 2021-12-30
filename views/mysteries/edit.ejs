@@ -24,18 +24,19 @@
             </div>
             <div class="mb-3">
                 <button class="btn btn-success">Edit Mystery</button>
+                <a class="btn btn-danger" href="/mysteries/<%= mystery._id%>">Go back</a>
             </div>
         </form>
         <div class="mb-3 position-relative">
             <% if(mystery.image.url !== undefined && mystery.image.filename !== undefined){ %>
             <img class="img-thumbnail" src="<%= mystery.image.url %>" alt="">
-            <form class="position-absolute start-0 bottom-0" action="/mysteries/<%= mystery._id %>?_method=PATCH" method="POST">
-                <button class="btn btn-danger">Delete image</button>
+            <form class="position-absolute start-0 top-0" action="/mysteries/<%= mystery._id %>?_method=PATCH" method="POST">
+                <button class="btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
             </form>
             <% } else{ %>
                 <p>No image available</p>
             <% } %>
         </div>
     </div>
-    <a href="/mysteries/<%= mystery._id%>">Dejar de editar</a>
+    
 </div>

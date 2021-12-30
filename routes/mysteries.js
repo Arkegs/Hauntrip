@@ -11,13 +11,15 @@ const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage });
 
-router.get('/:id/newevidence', isLoggedIn, evidence.renderNewForm);
+
 
 router.route('/')
     .get(catchAsync(mysteries.index))
     .post(isLoggedIn, upload.single('image'), validateMystery, catchAsync(mysteries.createMystery));
 
 router.get('/new', isLoggedIn, mysteries.renderNewForm);
+
+router.get('/:id/newevidence', isLoggedIn, evidence.renderNewForm);
 
 router.get('/search/spooky', mysteries.renderSpooky);
 router.get('/search/recent', mysteries.renderRecent);
