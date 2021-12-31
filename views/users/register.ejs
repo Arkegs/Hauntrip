@@ -30,8 +30,16 @@
             <div class="mb-3">
                 <label class="form-label" for="start">Birth Date</label>
                 <input type="date" id="birthdate" name="birthdate" value="2018-07-22" min="1900-01-01" max="2021-12-31" required>
+                <div class="invalid-feedback">
+                    User must be 13 years or older
+                </div>
             </div>      
-            <button class="btn btn-success">Register</button>
+            <div class="mb-3">
+                <label class="form-label" for="terms"><input type="checkbox" value="accept" id="terms" name="terms" required> I have read and agree with the Hauntrip <a href="/help">Terms and Conditions and Privacy Policy</a>  </label>
+            </div>    
+            <button id="submitButton" class="btn btn-success">Register</button>
         </form>
     </div>
 </div>
+
+<script src="/js/register.js"></script>

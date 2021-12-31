@@ -235,6 +235,10 @@ h2, h3, h4, h5, p{
     margin-bottom: 5px;
 }
 
+.vote-clicked{
+    opacity: 0.7;
+}
+
 .evidence-date{
     font-size: 0.8em;
 }

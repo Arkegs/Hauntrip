@@ -23,81 +23,96 @@ module.exports.createEvidence = async (req, res) => {
 };
 
 module.exports.rateEvidence = async (req, res) => {
+    let returnValue = {value:'none'};
+    console.log("EMPEZO EL WEBEO CONCHETUMARE");
+    console.log(req.body);
     const { id, evidenceId } = req.params;
     mongooseId = ObjectId(evidenceId);
     //If user has not rated evidence yet, creates a new rating on DB
     const answer = await Helpfulness.findOne({author: req.user._id, evidence:evidenceId}).exec();
     if(!answer){
-       const helpfulness = new Helpfulness();
-       helpfulness.value = req.body.helpfulness;
-       helpfulness.author = req.user._id;
-       helpfulness.evidence = evidenceId;
-       await helpfulness.save();
+        console.log("Nunca votaste por esta. Buena");
+        const helpfulness = new Helpfulness();
+        helpfulness.value = req.body.helpfulness;
+        helpfulness.author = req.user._id;
+        helpfulness.evidence = evidenceId;
+        await helpfulness.save();
+        returnValue.value = 'new'
+        console.log(returnValue);
+        console.log(returnValue.value);
     //Otherwise, update existing user rate  
     } else{
-       await Helpfulness.findByIdAndUpdate( answer._id, { value: req.body.helpfulness });
-    }
-    //Updates Evidence total helpfulness value
-    await Helpfulness.aggregate([
-        {
-            $match: {
-                evidence: mongooseId
-            }
-        },
-        {
-            $group: {
-                _id: '$evidence',
-                total: {$sum: '$value'}
-            }
+        console.log(answer.value + ' vs ' + req.body.helpfulness);
+        if(parseInt(answer.value) === parseInt(req.body.helpfulness)){
+            console.log("Votaste lo mismo que antes, aweonao");
+            return res.status(200).send({value: 'unchanged'});
+        } else{
+            console.log("Cambiaste de opinion");
+            await Helpfulness.findByIdAndUpdate( answer._id, { value: req.body.helpfulness });
+            returnValue.value = 'changed'
         }
-        ], async function(err, results){
-            if(err){
-                throw(err);
-            }else{
-                newValue = Math.round(results[0].total)
-                const updatedEvidence = await Evidence.findByIdAndUpdate(evidenceId, {helpfulness: newValue});
-                //If evidence is considered helpful, experience points are given both to evidence author and mystery author
-                if(updatedEvidence.expgiven === 0 && newValue === 5){
-                    await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 5});
-                    await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 5}});
-                    const mysteryAuthor = await Mystery.findOne({_id: id}).select('author');
-                    await User.findByIdAndUpdate(mysteryAuthor.author, {$inc: {exp: 2}});
+        //Updates Evidence total helpfulness value
+        await Helpfulness.aggregate([
+            {
+                $match: {
+                    evidence: mongooseId
                 }
-                //If evidence is VERY helpful, bonus experience points are given to evidence author
-                if(updatedEvidence.expgiven === 5 && newValue === 10){
-                    await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 15});
-                    await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 10}});
+            },
+            {
+                $group: {
+                    _id: '$evidence',
+                    total: {$sum: '$value'}
                 }
-                //Helpful evidences will impact on Mystery credibility
-                if(newValue >= 3 && newValue <= 6){
-                    const mysteryId = ObjectId(req.params.id);
-                    if(newValue >= 5){
-                        var isHelpful = true;
-                    } 
-                    if(newValue <= 4){
-                        var isHelpful = false;
+            }
+            ], async function(err, results){
+                if(err){
+                    throw(err);
+                } else{
+                    newValue = Math.round(results[0].total)
+                    const updatedEvidence = await Evidence.findByIdAndUpdate(evidenceId, {helpfulness: newValue});
+                    //If evidence is considered helpful, experience points are given both to evidence author and mystery author
+                    if(updatedEvidence.expgiven === 0 && newValue === 5){
+                        await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 5});
+                        await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 5}});
+                        const mysteryAuthor = await Mystery.findOne({_id: id}).select('author');
+                        await User.findByIdAndUpdate(mysteryAuthor.author, {$inc: {exp: 2}});
                     }
-                    //Search all helpful evidences
-                    await Evidence.findByIdAndUpdate(evidenceId, { isHelpful });
-                    const mysteryEvidences = await Mystery.findOne({_id: id}).populate({
-                        path: 'evidences',
-                        select: 'conclusion',
-                        match: { isHelpful: true }
-                    }).select('evidences').exec();
-                    //Calculates a ratio between real helpful evidences vs total helpful evidences
-                    const realTotal = mysteryEvidences.evidences.reduce((acc, current) => {
-                        if(current.conclusion === 'real'){ 
-                            return acc + 1
+                    //If evidence is VERY helpful, bonus experience points are given to evidence author
+                    if(updatedEvidence.expgiven === 5 && newValue === 10){
+                        await Evidence.findByIdAndUpdate(evidenceId, {expgiven: 15});
+                        await User.findByIdAndUpdate(updatedEvidence.author, {$inc: {exp: 10}});
+                    }
+                    //Helpful evidences will impact on Mystery credibility
+                    if(newValue >= 3 && newValue <= 6){
+                        const mysteryId = ObjectId(req.params.id);
+                        if(newValue >= 5){
+                            var isHelpful = true;
+                        } 
+                        if(newValue <= 4){
+                            var isHelpful = false;
                         }
-                        return acc;
-                    }, 0);
-                    const ratio = Math.round((realTotal/mysteryEvidences.evidences.length)*100);
-                    await Mystery.findByIdAndUpdate(id, {credibility: ratio});
+                        //Search all helpful evidences
+                        await Evidence.findByIdAndUpdate(evidenceId, { isHelpful });
+                        const mysteryEvidences = await Mystery.findOne({_id: id}).populate({
+                            path: 'evidences',
+                            select: 'conclusion',
+                            match: { isHelpful: true }
+                        }).select('evidences').exec();
+                        //Calculates a ratio between real helpful evidences vs total helpful evidences
+                        const realTotal = mysteryEvidences.evidences.reduce((acc, current) => {
+                            if(current.conclusion === 'real'){ 
+                                return acc + 1
+                            }
+                            return acc;
+                        }, 0);
+                        const ratio = Math.round((realTotal/mysteryEvidences.evidences.length)*100);
+                        await Mystery.findByIdAndUpdate(id, {credibility: ratio});
+                    }
                 }
-            }
-        }
-    );
-    return res.redirect(`/mysteries/${id}`);
+            }   
+        );
+    }
+    return res.status(200).send(returnValue);
 };
 
 module.exports.deleteEvidence = async (req, res) =>{

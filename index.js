@@ -51,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 app.use(mongoSanitize());
+app.use(require("body-parser").json());
 
 const sessionConfig = {
     name: 'session',
@@ -115,7 +116,8 @@ app.use(
                 "blob:",
                 "data:",
                 "https://res.cloudinary.com/arkeg/", 
-                "https://images.unsplash.com"
+                "https://images.unsplash.com",
+                "https://image.flaticon.com/"
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
