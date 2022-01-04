@@ -17,8 +17,8 @@ const UserSchema = new Schema({
         default: 0
     },
     banned:{
-        type: Boolean,
-        default: false
+        type: Number,
+        default: 0
     }
 }, 
 {

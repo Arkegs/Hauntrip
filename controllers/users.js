@@ -40,13 +40,29 @@ module.exports.logout = (req, res) => {
 
 module.exports.showUser = async (req, res) => {
     const userData = await User.findOne({username: req.params.username});
-    const userMysteries = await Mystery.find({author: userData._id}).limit(10).sort({createdAt: -1}).select('title image').exec();
     if(!userData){
         req.flash('error', 'User not found');
         return res.redirect('/mysteries');
     }
+    const userMysteries = await Mystery.find({author: userData._id}).limit(10).sort({createdAt: -1}).select('title image').exec();
     console.log(userMysteries);
     res.render('users/show', { userData, userMysteries });
+}
+
+module.exports.loadMysteries = async (req, res) =>{
+    console.log("ENTRAMOS AL CONTROLADOR CONCHETUMARE");
+    const userData = await User.findOne({username: req.params.username});
+    if(!userData){
+        req.flash('error', 'User not found');
+        return res.redirect('/mysteries');
+    }
+    const mysteryQuery = await Mystery.find({author: userData._id})
+                                      .skip(parseInt(req.query.skip))
+                                      .limit(10)
+                                      .sort({createdAt: -1})
+                                      .exec();
+    console.log('MANDANDO ESTA MIERDA: ' + mysteryQuery);
+    return res.send(mysteryQuery);
 }
 
 module.exports.userHelp = (req, res) =>{

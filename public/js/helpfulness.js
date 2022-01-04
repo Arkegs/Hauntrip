@@ -11,16 +11,16 @@ downvote.forEach((elem) => {
 
 async function postData(url, data = {}){
     const response = await fetch(url, {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      method: 'POST',
       mode: 'cors',
       cache: 'no-cache',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
+      body: JSON.stringify(data)
     });
     console.log(response.body);
-    return response.json(); // parses JSON response into native JavaScript objects
+    return response.json();
 };
 
 async function upVoting(){
@@ -31,8 +31,15 @@ async function upVoting(){
     this.parentElement.parentElement.children[2].children[0].disabled = false;
     const sentValue = { "helpfulness": 1 };
     console.log('La mandamos a: ' + this.form.action + ' Con valor: ' + sentValue);
-    let resp = await postData(this.form.action, sentValue);
-    console.log(this.form.action);
+    try {
+        var resp = await postData(this.form.action, sentValue);
+    } catch(e){
+        if(document.getElementsByClassName('nav-link')[3].innerText === 'Login'){
+            window.location.replace('/login');
+        } else{
+            document.location.reload();
+        }
+    }
     console.log(resp);
     if (resp.value === 'new'){
         let voteTotal = this.parentElement.parentElement.children[1];
@@ -63,9 +70,3 @@ async function downVoting(){
     }
     console.log(resp); 
 };
-
-
-postData('https://example.com/answer', { answer: 42 })
-  .then(data => {
-    console.log(data); // JSON data parsed by `data.json()` call
-  });

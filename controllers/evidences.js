@@ -24,34 +24,27 @@ module.exports.createEvidence = async (req, res) => {
 
 module.exports.rateEvidence = async (req, res) => {
     let returnValue = {value:'none'};
-    console.log("EMPEZO EL WEBEO CONCHETUMARE");
-    console.log(req.body);
     const { id, evidenceId } = req.params;
     mongooseId = ObjectId(evidenceId);
     //If user has not rated evidence yet, creates a new rating on DB
     const answer = await Helpfulness.findOne({author: req.user._id, evidence:evidenceId}).exec();
     if(!answer){
-        console.log("Nunca votaste por esta. Buena");
         const helpfulness = new Helpfulness();
         helpfulness.value = req.body.helpfulness;
         helpfulness.author = req.user._id;
         helpfulness.evidence = evidenceId;
         await helpfulness.save();
         returnValue.value = 'new'
-        console.log(returnValue);
-        console.log(returnValue.value);
-    //Otherwise, update existing user rate  
+    //Otherwise, update existing user rating  
     } else{
-        console.log(answer.value + ' vs ' + req.body.helpfulness);
+        //In case User has already voted, the user could change its vote or vote the same value again
         if(parseInt(answer.value) === parseInt(req.body.helpfulness)){
-            console.log("Votaste lo mismo que antes, aweonao");
             return res.status(200).send({value: 'unchanged'});
         } else{
-            console.log("Cambiaste de opinion");
             await Helpfulness.findByIdAndUpdate( answer._id, { value: req.body.helpfulness });
             returnValue.value = 'changed'
         }
-        //Updates Evidence total helpfulness value
+        //Either result, it updates Evidence total helpfulness value
         await Helpfulness.aggregate([
             {
                 $match: {
@@ -106,6 +99,7 @@ module.exports.rateEvidence = async (req, res) => {
                             return acc;
                         }, 0);
                         const ratio = Math.round((realTotal/mysteryEvidences.evidences.length)*100);
+                        //Finally, updates Mystery credibility and assigns the ratio value as new Crediblity
                         await Mystery.findByIdAndUpdate(id, {credibility: ratio});
                     }
                 }

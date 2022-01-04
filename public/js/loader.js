@@ -10,6 +10,7 @@ document.getElementById("loadEvidences").addEventListener("click", function(){
             return res.json();
         })
         .then(data => {
+            //Server response structure changes depending if the user is logged in or not
             if(data.currentUser){
                 var fetchedEvidences = data.mystery.evidences;
             } else{
@@ -35,7 +36,6 @@ document.getElementById("loadEvidences").addEventListener("click", function(){
                         helpful = 'helpful'
                         helpfulMsg = '<p class="helpfulMsg">This evidence is considered Helpful!</p>'
                     }
-                    //document.getElementById('evidences-container').innerHTML += ('<div class="card mb-3"><div class="card-body"><h3>' + evidence.title + '</h3><h6 class="card-subtitle mb-2 text-muted">By <a href="/user/'+ evidence.author.username +'">'+ evidence.author.username +' </a></h6><p>Conclusion: '+ evidence.conclusion +' </p><p>Evidence: '+ evidence.body +'</p>' + imgString + delString + '<form action="/mysteries/'+ mystery._id +'/evidences/'+ evidence._id +'" method="POST">             <button type="submit" name="helpfulness" value="1" class="btn btn-sm btn-primary">Upvote</button></form>'+ evidence.helpfulness +'<form action="/mysteries/'+ mystery._id +'/evidences/'+evidence._id+'" method="POST"><button type="submit" name="helpfulness" value="-1" class="btn btn-sm btn-success">Downvote</button></form></div></div>');
                     let fullString = ('<div class="single-evidence '+ helpful +'"><h4>'+ evidence.title +'</h4><h6 class="author-name">By <a href="/user/'+ evidence.author.username +'">'+ evidence.author.username+'</a></h6><p>Conclusion: '+ capitalizeFirstLetter(evidence.conclusion) +'</p><p>Evidence: '+ evidence.body +'</p>' + imgString + '<div class="evidence-panel"><div class="evidence-upvote"><form action="/mysteries/' + mystery._id + '/evidences/'+ evidence._id + '" method="POST"><button type="submit" name="helpfulness" value="1" class="upvote-arrow"></button></form><span class="vote-counter">'+ evidence.helpfulness +'</span><form action="/mysteries/'+ mystery._id +'/evidences/'+ evidence._id +'" method="POST"><button type="submit" name="helpfulness" value="-1" class="downvote-arrow"></button></form></div>' + '<div class="evidence-report"> <button onClick="reportModal(\'/mysteries/' + mystery._id + '/evidences/'+ evidence._id + '\')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button> ' + delString +'</div></div>' + helpfulMsg + '<p class="evidence-date">' + new Date(evidence.createdAt).getDate() + '/' + new Date(evidence.createdAt).getMonth() + '/' + new Date(evidence.createdAt).getFullYear() + '</p>' + '</div>');
                     document.getElementById('evidences-container').innerHTML += fullString;
                 }

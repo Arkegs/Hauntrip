@@ -1,16 +1,36 @@
 <% layout('./layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/user.css">
 
-<div class="card mb-3">
-   <h1>USER MOTHERFUCKER</h1>
-   <p><%= userData.username %></p>
-   <p><%= userData.email %></p> 
-   <p><%= userData.birthdate %></p>
-   <p>Experience: <%= userData.exp %></p> 
+<div class="user-section">
+    <div class="user-panel">
+        <h3><%= userData.username %></h3>
+        <hr>
+        <p class="user-data" >Experience: </p>
+        <div class="progress position-relative">
+            <div id="exp-bar" class="progress-bar bg-primary" role="progressbar" style="width: 50px" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><%= userData.exp %></div>
+        </div>
+        <p class="user-data">Rank:</p> <p id="rank-title">Newbie</p>
+        <p class="user-data">Member since: </p> <p> <%= userData.createdAt ? (userData.createdAt.getFullYear() + '/' + (userData.createdAt.getMonth()+1) + '/' + userData.createdAt.getDate()) : 'Not known'; %></p>
+    </div>
+
+    <div class="user-mystery-section">
+        <h3><%= userData.username %>'s Mysteries</h3>
+        <p><%= (userMysteries.length < 1) ? 'This user has not posted any mystery yet' : '' %></p>
+        <div id="user-mysteries" class="user-mysteries">
+            <% for(let mystery of userMysteries){ %>
+                <a href="/mysteries/<%= mystery._id %>" class="single-mystery">
+                    <img style="width:100px; height: 100px;" src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="">
+                    <p><%= mystery.title %></p>
+                </a>
+            <% } %>
+        </div>
+        <% if(userMysteries.length >= 10){%>
+        <div class="loadButton">
+            <button id="loadMysteries" class="btn btn-lg btn-primary loadButton">Load more</button>
+        </div>
+        <% } %>
+    </div>
 </div>
 
-<% for(let mystery of userMysteries){ %>
-    <div class="card mb-3">
-        <img style="width:100px; height: 100px;" src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1636751000/Hauntrip/unavailable_g5kbfo.png' %>" alt="">
-        <a href="/mysteries/<%= mystery._id %>"><%= mystery.title %></a>
-    </div>
-<% } %>
+<script src="/js/user.js"></script>
+<script>expRender(<%= userData.exp %>)</script>

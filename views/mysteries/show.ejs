@@ -46,7 +46,7 @@
             </div>
             <div class="summary-item">
                 <h5>Created at:</h5>
-                <%= mystery.createdAt.getDate() + '/' + mystery.createdAt.getMonth() + '/' + mystery.createdAt.getFullYear() %>
+                <%= mystery.createdAt.getDate() + '/' + (mystery.createdAt.getMonth()+1) + '/' + mystery.createdAt.getFullYear() %>
             </div>
         </div>
     </div>
@@ -126,7 +126,7 @@
                             <% if(evidence.helpfulness >= 5){ %> 
                                 <p class="helpfulMsg">This evidence is considered Helpful!</p> 
                             <% } %>
-                            <p class="evidence-date"><%= evidence.createdAt.getDate() + '/' + evidence.createdAt.getMonth() + '/' + evidence.createdAt.getFullYear() %></p> 
+                            <p class="evidence-date"><%= evidence.createdAt.getDate() + '/' + (evidence.createdAt.getMonth()+1) + '/' + evidence.createdAt.getFullYear() %></p> 
                     </div>
                 <% } %>
             </div>

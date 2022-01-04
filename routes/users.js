@@ -19,4 +19,6 @@ router.get('/help', users.userHelp);
 
 router.get('/user/:username', users.showUser);
 
+router.get('/user/:username/load', users.loadMysteries);
+
 module.exports = router;
