@@ -11,7 +11,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params:{
         folder: 'Hauntrip',
-        allowFormats: ['jpeg', 'png', 'jpg']
+        allowed_formats: ['jpeg', 'png', 'jpg', 'jpeg', 'heic', 'bmp']
     }
 });
 

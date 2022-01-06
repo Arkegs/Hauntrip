@@ -9,9 +9,7 @@ const { mysterySchema, spokinessSchema } = require('../validationSchemas.js');
 const { isLoggedIn, isAuthor, validateMystery, validateUpdateMystery, validateSpookiness } = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../cloudinary');
-const upload = multer({ storage });
-
-
+const upload = multer({ storage, limits: {fileSize: 2000*1000, files: 1} });
 
 router.route('/')
     .get(catchAsync(mysteries.index))

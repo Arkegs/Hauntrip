@@ -101,11 +101,13 @@
                             <h6 class="author-name">By <a href="/user/<%= evidence.author.username %>"><%= evidence.author.username %></a></h6>
                             <p>Conclusion: <%= evidence.conclusion.charAt(0).toUpperCase() + evidence.conclusion.slice(1) %></p>
                             <p>Evidence: <%= evidence.body %></p>
-                            <% for (let evidenceImg of evidence.images){ %>
-                                <a class="evidence-thumbnail" href="<%= evidenceImg.url %>" target="_blank">
-                                    <img class="img-thumbnail" src="<%= evidenceImg.url %>">
-                                </a>
-                            <% } %>
+                            <div class="evidence-img-container">
+                                <% for (let evidenceImg of evidence.images){ %>
+                                    <a class="evidence-thumbnail" href="<%= evidenceImg.url %>" target="_blank">
+                                        <img class="img-thumbnail" src="<%= evidenceImg.url %>">
+                                    </a>
+                                <% } %>
+                            </div>
                             <div class="evidence-panel">
                                 <div class="evidence-upvote">
                                     <form action="/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>"  method="POST">

@@ -24,8 +24,11 @@
             </div>
             <div class="mb-3">
                 <div class="mb-3">
-                    <label for="image" class="form-label">Upload front image</label>
+                    <label for="image" class="form-label">Upload front image (Max size: 2MB)</label>
                     <input class="form-control" type="file" id="image" name="image">
+                    <div class="invalid-feedback">
+                        Please provide a valid image.
+                    </div>
                 </div>
             </div>
             <div class="mb-3">
@@ -43,7 +46,7 @@
     </div>
 </div>
 
-<script src="/js/pageMapSelect.js">
+<script src="/js/pageMapSelect.js"></script>
+<script src="/js/sizeLimit.js"></script>
 
-</script>
 

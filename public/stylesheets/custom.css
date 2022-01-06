@@ -194,6 +194,12 @@ body{
     position: relative;
 }
 
+@media screen and (max-width: 1400px) {
+    .mystery-photo-caption{
+        margin-top: 10px;
+    }
+}
+
 @media screen and (max-width: 991.5px) {
     .user-panel{
         flex-direction: column;
@@ -234,6 +240,9 @@ body{
         width: 42%;
         padding-top: 50%;
     }
+    .mystery-photo-caption{
+        margin-top: 10px;
+    }
 }
 
 
@@ -241,6 +250,9 @@ body{
     .photo-container{
         width: 90%;
         padding-top: 90%;
+    }
+    .mystery-photo-caption{
+        margin-top: 10px;
     }
 }
 
