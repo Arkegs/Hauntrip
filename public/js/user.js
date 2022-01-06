@@ -62,7 +62,7 @@ document.getElementById("loadMysteries").addEventListener("click", function(){
                 document.getElementById("loadMysteries").style.display = "none"
             } else{
                 for(let mystery of fetchedMysteries){
-                    let fullString = ('<a href="/mysteries/'+ mystery._id +'" class="single-mystery"><img style="width:100px; height: 100px;" src="'+ (mystery.image ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1636751000/Hauntrip/unavailable_g5kbfo.png') +'" alt=""><p>'+ mystery.title +'</p></a>');
+                    let fullString = ('<a href="/mysteries/'+ mystery._id +'" class="single-mystery"><img style="width:100px; height: 100px;" src="'+ (mystery.image ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png') +'" alt=""><p>'+ mystery.title +'</p></a>');
                     document.getElementById('user-mysteries').innerHTML += fullString;
                 }
             }

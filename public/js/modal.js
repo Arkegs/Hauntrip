@@ -1,5 +1,3 @@
-
-
 // Get the modal
 var modal = document.getElementById("hauntrip-modal");
 var modalInner = document.getElementById("modal-content-inner");
@@ -22,13 +20,13 @@ function reportMysteryModal(param){
 
 function deleteEvidenceModal(param){
     headerTitle.innerHTML = 'Delete Evidence'
-    modalInner.innerHTML = '<p> Are you sure you want to delete this evudebce? </p> <form action="'+ param +'" method="POST"> <button class="btn btn-danger">Delete</button></form>'
+    modalInner.innerHTML = `<p> Are you sure you want to delete this evidence? </p> <form action="${param}" method="POST"> <button class="btn btn-danger">Delete</button></form>`
     modal.style.display = "block";
 }
 
 function deleteMysteryModal(param){
     headerTitle.innerHTML = 'Delete Mystery'
-    modalInner.innerHTML = '<p> Are you sure you want to delete this mystery? </p> <form action="'+ param +'" method="POST"> <button class="btn btn-danger">Delete</button></form>'
+    modalInner.innerHTML = `<p> Are you sure you want to delete this mystery? </p> <form action="${param}" method="POST"> <button class="btn btn-danger">Delete</button></form>`
     modal.style.display = "block";
 }
 

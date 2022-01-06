@@ -19,6 +19,14 @@ const UserSchema = new Schema({
     banned:{
         type: Number,
         default: 0
+    },
+    status:{
+        type: String,
+        default: 'active'
+    },
+    isAdmin:{
+        type: Boolean,
+        default: false
     }
 }, 
 {

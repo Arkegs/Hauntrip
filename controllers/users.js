@@ -16,6 +16,9 @@ module.exports.register = async (req, res, next) => {
             res.redirect('/mysteries');
         })
     } catch(e){
+        if(e.message.substring(0,6) === 'E11000'){
+            e.message = 'Email already in use'
+        }
         req.flash('error', e.message);
         res.redirect('/register');
     }
@@ -50,7 +53,6 @@ module.exports.showUser = async (req, res) => {
 }
 
 module.exports.loadMysteries = async (req, res) =>{
-    console.log("ENTRAMOS AL CONTROLADOR CONCHETUMARE");
     const userData = await User.findOne({username: req.params.username});
     if(!userData){
         req.flash('error', 'User not found');
@@ -61,7 +63,6 @@ module.exports.loadMysteries = async (req, res) =>{
                                       .limit(10)
                                       .sort({createdAt: -1})
                                       .exec();
-    console.log('MANDANDO ESTA MIERDA: ' + mysteryQuery);
     return res.send(mysteryQuery);
 }
 

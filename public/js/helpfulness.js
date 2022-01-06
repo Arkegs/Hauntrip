@@ -30,7 +30,6 @@ async function upVoting(){
     this.parentElement.parentElement.children[2].children[0].classList.remove('vote-clicked');
     this.parentElement.parentElement.children[2].children[0].disabled = false;
     const sentValue = { "helpfulness": 1 };
-    console.log('La mandamos a: ' + this.form.action + ' Con valor: ' + sentValue);
     try {
         var resp = await postData(this.form.action, sentValue);
     } catch(e){
@@ -58,8 +57,16 @@ async function downVoting(){
     this.classList.add('vote-clicked');
     this.disabled = true;
     const sentValue = { "helpfulness" : -1 };
-    console.log(this.form.action);
-    let resp = await postData(this.form.action, sentValue);
+    try {
+        var resp = await postData(this.form.action, sentValue);
+    } catch(e){
+        if(document.getElementsByClassName('nav-link')[3].innerText === 'Login'){
+            window.location.replace('/login');
+        } else{
+            document.location.reload();
+        }
+    }
+    console.log(resp);
     if (resp.value === 'new'){
         let voteTotal = this.parentElement.parentElement.children[1];
         voteTotal.innerText = parseInt(voteTotal.innerText) + sentValue.helpfulness;
@@ -68,5 +75,4 @@ async function downVoting(){
         let voteTotal = this.parentElement.parentElement.children[1];
         voteTotal.innerText = parseInt(voteTotal.innerText) + (sentValue.helpfulness)*2;
     }
-    console.log(resp); 
 };

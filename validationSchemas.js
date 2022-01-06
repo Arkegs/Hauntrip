@@ -23,6 +23,16 @@ const extension = (joi) => ({
 
 const Joi = BaseJoi.extend(extension);
 
+
+module.exports.userSchema = Joi.object({
+    user: Joi.object({
+        username: Joi.string().regex(/^(?=.{5,15}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$/).required().escapeHTML(),
+        password: Joi.string().regex(/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$/).required().escapeHTML(),
+        email: Joi.string().required().escapeHTML(),
+        birthdate: Joi.date().required()
+    })
+});
+
 module.exports.mysterySchema = Joi.object({
     mystery: Joi.object({
         title: Joi.string().required().escapeHTML(),

@@ -60,7 +60,7 @@
             <h4>Description</h4>
             <p style = 'white-space: pre-wrap; margin-top: 20px;'><%= mystery.description %></p>
                 <div class="mystery-author-panel">
-                    <% if(currentUser && mystery.author._id.equals(currentUser._id)){ %>
+                    <% if(currentUser && (mystery.author._id.equals(currentUser._id) || currentUser.isAdmin === true)){ %>
                         <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
                         <button onClick="deleteMysteryModal('/mysteries/<%= mystery._id %>?_method=DELETE')" class="btn btn-danger">Delete Mystery</button>
                     <% } %>
@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="evidence-report">
                                     <button onClick="reportModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
-                                    <% if(currentUser && evidence.author.equals(currentUser._id)){ %>
+                                    <% if(currentUser && (evidence.author.equals(currentUser._id) || currentUser.isAdmin === true)){ %>
                                     <button onClick="deleteEvidenceModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE')" class="transparent-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                     <% } %>
                                 </div>

@@ -8,9 +8,12 @@
         <form action="" method="POST" class="validated-form" novalidate>
             <div class="mb-3">
                 <label class="form-label" for="username">Username</label>
-                <input class="form-control" type="text" name="username" id="username" required>
+                <input class="form-control" type="text" name="username" id="username" pattern="^(?=.{5,15}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" required>
                 <div class="valid-feedback">
                     Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Username must have 5 - 15 characters. Only letters, numbers and "-"
                 </div>
             </div>  
             <div class="mb-3">
@@ -22,20 +25,26 @@
             </div> 
             <div class="mb-3">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" type="password" name="password" id="password" required>
+                <input  class="form-control" type="password" name="password" id="password" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" required>
                 <div class="valid-feedback">
                     Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Password must have 8 - 20 characters. Only letters, numbers and "-"
                 </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="start">Birth Date</label>
-                <input type="date" id="birthdate" name="birthdate" value="2018-07-22" min="1900-01-01" max="2021-12-31" required>
+                <input type="date" id="birthdate" name="birthdate" min="1900-01-01" max="2021-12-31" required>
                 <div class="invalid-feedback">
                     User must be 13 years or older
                 </div>
             </div>      
             <div class="mb-3">
                 <label class="form-label" for="terms"><input type="checkbox" value="accept" id="terms" name="terms" required> I have read and agree with the Hauntrip <a href="/help">Terms and Conditions and Privacy Policy</a>  </label>
+                <div class="invalid-feedback">
+                    You must agree with our Terms and Conditions, and our Privacy Policy
+                </div>
             </div>    
             <button id="submitButton" class="btn btn-success">Register</button>
         </form>
