@@ -66,18 +66,21 @@ module.exports.renderNewForm = (req, res) => {
 module.exports.createMystery = async (req, res, next) => {
     // if(!req.body.mystery) throw new ExpressError('Invalid mystery data', 400);
     const mystery = new Mystery(req.body.mystery);
-    mystery.geometry = {type: 'Point', coordinates: req.body.mystery.geometry.split(',')};
+    mystery.geometry = {type: 'Point', coordinates: req.body.mystery.geometry.split(',').reverse()};
     const location = await geocoder.reverseGeocode({
         query: mystery.geometry.coordinates
     }).send();
-    mystery.location = location.body.features[0].context.pop().text + ', ' + location.body.features[0].context.pop().text;
-    console.log(req.file);
+    if(location.body.features.length > 0){
+        mystery.location = location.body.features[0].context.pop().text + ', ' + location.body.features[0].context.pop().text;
+    }
+    else{
+        mystery.location = 'Unknown location'
+    }
     if(req.file){
         mystery.image = { url: req.file.path, filename: req.file.filename };
     }
     mystery.author = req.user._id;
     await mystery.save();
-    console.log(mystery);
     req.flash('success', 'Succesfully made a new Mystery!');
     res.redirect(`/mysteries/${mystery._id}`);
 };

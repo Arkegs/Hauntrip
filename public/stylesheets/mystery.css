@@ -56,6 +56,10 @@ h2, h3, h4, h5, p{
     margin: 0 auto;
 }
 
+.mystery-info-data h2{
+    word-wrap:break-word;
+}
+
 .mystery-info-data .img-container{
     width: 80%;
     margin: auto;
@@ -78,6 +82,15 @@ h2, h3, h4, h5, p{
 
 .mystery-author-panel a, .mystery-author-panel button{
     margin-right: 10px;
+}
+
+.mystery-body{
+    margin-top: 20px;
+}
+
+.mystery-body, .evidence-title, .evidence-body{
+    white-space: pre-wrap;
+    word-wrap:break-word;
 }
 
 .user-block{
@@ -345,6 +358,10 @@ h2, h3, h4, h5, p{
 }
 
 @media screen and (max-width: 500px) {
+    .progress{
+        width: 100%;
+    }
+
     .evidence-thumbnail{
         max-width: 50px;
         max-height: 50px;

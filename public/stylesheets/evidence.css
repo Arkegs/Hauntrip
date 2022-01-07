@@ -1,0 +1,37 @@
+.form-custom-title{
+    font-size: 1.2em;
+}
+
+svg {
+    fill: rgb(58, 58, 58);
+    height: 3.6rem;
+    width: 3.6rem;
+    margin: 0.2rem;
+}
+
+input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+  
+input[type="radio"] + svg {
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+  
+input + svg {
+    cursor: pointer;
+}
+
+input[class="conclusion1"]:hover + svg,
+input[class="conclusion1"]:checked + svg,
+input[class="conclusion1"]:focus + svg {
+  fill: rgb(21, 182, 47);
+}
+
+
+input[class="conclusion2"]:hover + svg,
+input[class="conclusion2"]:checked + svg,
+input[class="conclusion2"]:focus + svg {
+  fill: rgb(239, 42, 16);
+}

@@ -58,7 +58,7 @@
                 <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="...">
             </div>
             <h4>Description</h4>
-            <p style = 'white-space: pre-wrap; margin-top: 20px;'><%= mystery.description %></p>
+            <p class="mystery-body"><%= mystery.description %></p>
                 <div class="mystery-author-panel">
                     <% if(currentUser && (mystery.author._id.equals(currentUser._id) || currentUser.isAdmin === true)){ %>
                         <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
@@ -97,10 +97,10 @@
                 <hr>
                 <% for (let evidence of mystery.evidences){ %>
                     <div class="single-evidence <% if(evidence.helpfulness >= 5){ %> helpful <% } %>">        
-                            <h4><%= evidence.title %></h4>
+                            <h4 class="evidence-title"><%= evidence.title %></h4>
                             <h6 class="author-name">By <a href="/user/<%= evidence.author.username %>"><%= evidence.author.username %></a></h6>
                             <p>Conclusion: <%= evidence.conclusion.charAt(0).toUpperCase() + evidence.conclusion.slice(1) %></p>
-                            <p>Evidence: <%= evidence.body %></p>
+                            <p class="evidence-body">Evidence: <%= evidence.body %></p>
                             <div class="evidence-img-container">
                                 <% for (let evidenceImg of evidence.images){ %>
                                     <a class="evidence-thumbnail" href="<%= evidenceImg.url %>" target="_blank">

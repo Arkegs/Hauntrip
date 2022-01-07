@@ -10,7 +10,7 @@ map.addControl(new mapboxgl.NavigationControl());
 
 map.on('click', (e) => {
     let markers = document.getElementsByClassName('mapboxgl-marker mapboxgl-marker-anchor-center');
-    document.getElementById('location').value = e.lngLat.lng + ',' + e.lngLat.lat;
+    document.getElementById('location').value = e.lngLat.lat + ',' + e.lngLat.lng;
     if(markers.length > 0){
         markers[0].remove();
     }
