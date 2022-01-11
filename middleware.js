@@ -1,4 +1,4 @@
-const { mysterySchema, updateMysterySchema, evidenceSchema, spookinessSchema, userSchema } = require('./validationSchemas.js');
+const { mysterySchema, updateMysterySchema, evidenceSchema, spookinessSchema, userSchema, reportSchema } = require('./validationSchemas.js');
 const ExpressError = require('./utils/ExpressError');
 const Mystery = require('./models/mystery');
 const Evidence = require('./models/evidence');
@@ -10,6 +10,16 @@ module.exports.isLoggedIn = (req, res, next) =>{
         req.flash('error', 'You must be logged in first!');
         return res.redirect('/login');
     }
+    next();
+}
+
+module.exports.checkUserStatus = async(req, res, next) =>{
+    const checkedUser = await User.findById(req.user._id).exec();
+    if(checkedUser.status === 'unconfirmed') {
+        req.flash('error', 'You must first verify your email address to do that');
+        return res.redirect(`/user/${req.user.username}`);
+    }
+    console.log('User verified');
     next();
 }
 
@@ -82,10 +92,19 @@ module.exports.validateEvidence = (req, res, next) => {
 }
 
 module.exports.validateSpookiness = (req, res, next) =>{
-    console.log(req.body);
     const { error } = spookinessSchema.validate({spookiness: {value: req.body.spookiness}});
     if(error){
         //const msg = error.details.map(el => el.message).join('.');
+        const msg = 'Data is not valid';
+        throw new ExpressError(msg, 400);
+    } else{
+        next();
+    }
+}
+
+module.exports.validateReport = (req, res, next) =>{
+    const { error } = reportSchema.validate({report: {report: req.body.report}});
+    if(error){
         const msg = 'Data is not valid';
         throw new ExpressError(msg, 400);
     } else{

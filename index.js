@@ -55,7 +55,7 @@ app.use(require("body-parser").json());
 
 const sessionConfig = {
     name: 'session',
-    secret: 'fullyfuckingsecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -65,6 +65,8 @@ const sessionConfig = {
         maxAge: 1000 * 60 * 60 * 25 * 7
     }
 };
+
+
 
 app.use(session(sessionConfig));
 app.use(flash());

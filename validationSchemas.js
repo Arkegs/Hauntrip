@@ -66,3 +66,10 @@ module.exports.spookinessSchema = Joi.object({
     }
     ).required()
 });
+
+module.exports.reportSchema = Joi.object({
+    report: Joi.object({
+        report: Joi.string().max(1500).required().escapeHTML(),
+    }
+    ).required()
+});

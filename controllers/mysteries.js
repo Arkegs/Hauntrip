@@ -40,7 +40,6 @@ module.exports.renderRecent = async(req, res) => {
     if(mysteries.docs.length < 1){
         res.redirect('/mysteries');
     }
-    console.log(mysteries);
     res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most recent mysteries' });
 };
 
@@ -96,7 +95,6 @@ module.exports.showMystery = async (req, res) => {
             path: 'author'
         }
     }).populate('author');
-    console.log(mystery.evidences);
     if(!mystery){
         req.flash('error', 'Mystery not found');
         return res.redirect('/mysteries');
@@ -129,7 +127,6 @@ module.exports.loadMysteryEvidences = async (req, res) =>{
             mystery: mysteryQuery,
             currentUser: req.user._id.toString()
         }
-        console.log(mystery);
         return res.send(mystery);
     }
     const mystery = mysteryQuery;
@@ -148,7 +145,6 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateMystery = async (req, res) => {
     const { id } = req.params;
     const mystery = await Mystery.findByIdAndUpdate(id, {... req.body.mystery});
-    console.log(req.file);
     if(req.file){
         if(mystery.image.filename){
             await cloudinary.uploader.destroy(mystery.image.filename);
@@ -205,7 +201,6 @@ module.exports.deleteMystery = async (req, res) => {
     const deletedMystery = await Mystery.findById(id).exec();
     //If Mystery has related Evidence, it must be deleted too
     if(deletedMystery.evidences.length > 0){
-        console.log(deletedMystery.evidences);
         //Must check if Evidence has photos. If so, remove them from Cloudinary
         for(let evidence of deletedMystery.evidences){
             deletedEvidence = await Evidence.findById(evidence).exec();

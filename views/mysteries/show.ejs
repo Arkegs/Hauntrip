@@ -64,7 +64,7 @@
                         <a class="btn btn-success" href="/mysteries/<%= mystery._id %>/edit">Edit Mystery</a>
                         <button onClick="deleteMysteryModal('/mysteries/<%= mystery._id %>?_method=DELETE')" class="btn btn-danger">Delete Mystery</button>
                     <% } %>
-                    <button onClick="reportMysteryModal('/mysteries/<%= mystery._id %>')" class="transparent-btn" style="margin: 0;"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
+                    <button onClick="reportMysteryModal('<%= mystery._id %>')" class="transparent-btn" style="margin: 0;"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
                 </div>
         </div>
         <hr>
@@ -119,7 +119,7 @@
                                     </form>
                                 </div>
                                 <div class="evidence-report">
-                                    <button onClick="reportModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
+                                    <button onClick="reportModal('<%= evidence._id %>')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
                                     <% if(currentUser && (evidence.author.equals(currentUser._id) || currentUser.isAdmin === true)){ %>
                                     <button onClick="deleteEvidenceModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE')" class="transparent-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                     <% } %>

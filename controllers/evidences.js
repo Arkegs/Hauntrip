@@ -12,7 +12,6 @@ module.exports.renderNewForm = (req, res) =>{
 module.exports.createEvidence = async (req, res) => {
     const mystery = await Mystery.findById(req.params.id);
     const evidence = new Evidence(req.body.evidence);
-    console.log(req.body);
     evidence.author = req.user._id;
     evidence.images = req.files.map(f => ({ url: f.path, filename: f.filename}));
     mystery.evidences.push(evidence);

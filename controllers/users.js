@@ -1,5 +1,8 @@
 const User = require('../models/user');
 const Mystery = require('../models/mystery');
+const Evidence = require('../models/evidence');
+const Report = require('../models/report');
+const nodemailer = require('nodemailer');
 
 module.exports.renderRegister = (req, res) => {
     res.render('users/register');
@@ -12,7 +15,8 @@ module.exports.register = async (req, res, next) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err =>{
             if(err) return next(err);
-            req.flash('success', 'Welcome to Hauntrip');
+            verifyMail('hauntrip.contact@gmail.com');
+            req.flash('success', 'Welcome to Hauntrip! Please, verify your email to use all our features.');
             res.redirect('/mysteries');
         })
     } catch(e){
@@ -48,7 +52,6 @@ module.exports.showUser = async (req, res) => {
         return res.redirect('/mysteries');
     }
     const userMysteries = await Mystery.find({author: userData._id}).limit(10).sort({createdAt: -1}).select('title image').exec();
-    console.log(userMysteries);
     res.render('users/show', { userData, userMysteries });
 }
 
@@ -68,4 +71,81 @@ module.exports.loadMysteries = async (req, res) =>{
 
 module.exports.userHelp = (req, res) =>{
     res.render('users/help');
+}
+
+module.exports.reportMystery = async (req, res) =>{
+    const reportedMystery = await Mystery.findOne({_id: req.params.reportedId}).exec();
+    if(!reportedMystery){
+        req.flash('error', 'Report could not be submitted. Please try again later');
+        return res.redirect('back');
+    }
+    const report = new Report({report: req.body.report});
+    report.reportType = 'mystery',
+    report.reportedElement = req.params.reportedId;
+    report.author = req.user._id;
+    report.accused = reportedMystery.author;
+    console.log(report);
+    await report.save();
+    req.flash('success', 'Your report has been successfully submitted');
+    return res.redirect('back');
+}
+
+module.exports.reportEvidence = async (req, res) =>{
+    const reportedEvidence = await Evidence.findOne({_id: req.params.reportedId}).exec();
+    if(!reportedEvidence){
+        req.flash('error', 'Report could not be submitted. Please try again later');
+        return res.redirect('back');
+    }
+    const report = new Report({report: req.body.report});
+    report.reportType = 'evidence',
+    report.author = req.user._id;
+    report.reportedElement = req.params.reportedId;
+    report.accused = reportedEvidence.author;
+    console.log(report);
+    await report.save();
+    req.flash('success', 'Your report has been successfully submitted');
+    return res.redirect('back');
+}
+
+module.exports.reportUser = async (req, res) =>{
+    const reportedUser = await User.findOne({username: req.params.reportedId}).exec();
+    if(!reportedUser){
+        req.flash('error', 'Report could not be submitted. Please try again later');
+        return res.redirect('back');
+    }
+    const report = new Report({report: req.body.report});
+    report.reportType = 'user',
+    report.author = req.user._id;
+    report.accused = reportedUser._id;
+    console.log(report);
+    await report.save();
+    req.flash('success', 'Your report has been successfully submitted');
+    return res.redirect('back');
+}
+
+const verifyMail = async (userMail) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          type: 'OAuth2',
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD,
+          clientId: process.env.OAUTH_CLIENTID,
+          clientSecret: process.env.OAUTH_CLIENT_SECRET,
+          refreshToken: process.env.OAUTH_REFRESH_TOKEN
+        }
+    });
+    let mailOptions = {
+        from: 'hauntrip.contact@gmail.com',
+        to: userMail,
+        subject: 'Verify your account',
+        text: 'Welcome to Hauntrip! Get ready to explore, post, and review hundreds of mysteries. To do so, please verify your email by clicking the following link: '
+    };  
+    transporter.sendMail(mailOptions, function(err, data) {
+        if (err) {
+          console.log("Error " + err);
+        } else {
+          console.log("Email sent successfully");
+        }
+    });
 }

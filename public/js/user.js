@@ -3,8 +3,6 @@ function expRender(exp){
     const rankTitle = document.getElementById("rank-title");
     let maxExp = 0;
     let minExp = 0;
-    console.log(exp);
-    console.log(expBar);
     switch(true){
         case (exp < 20):
             maxExp = 20;
@@ -49,14 +47,12 @@ function capitalizeFirstLetter(string) {
 var loads = 1;
 
 document.getElementById("loadMysteries").addEventListener("click", function(){
-    console.log(window.location.href + '/load?skip='+ loads*10);
     fetch(window.location.href + '/load?skip='+ loads*10)
         .then(res => {
             return res.json();
         })
         .then(data => {
             var fetchedMysteries = data;
-            console.log(fetchedMysteries);
             if(fetchedMysteries.length < 1){
                 document.getElementById('user-mysteries').innerHTML += ('<div class="loadButton">No more mysteries to load</div>');
                 document.getElementById("loadMysteries").style.display = "none"

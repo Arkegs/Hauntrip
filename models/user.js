@@ -21,8 +21,9 @@ const UserSchema = new Schema({
         default: 0
     },
     status:{
-        type: String,
-        default: 'active'
+        type: String, 
+        enum: ['active','unconfirmed', 'banned'],
+        default: 'unconfirmed'
     },
     isAdmin:{
         type: Boolean,
