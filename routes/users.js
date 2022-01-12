@@ -4,7 +4,7 @@ const passport = require('passport');
 const users = require('../controllers/users');
 const catchAsync = require('../utils/catchAsync');
 const { reportSchema } = require('../validationSchemas.js');
-const { isLoggedIn, validateUser, checkUserStatus, validateReport } = require('../middleware');
+const { isLoggedIn, isUser, validateUser, checkUserStatus, validateReport } = require('../middleware');
 const User = require('../models/user');
 
 router.route('/register')
@@ -18,6 +18,19 @@ router.route('/login')
 router.get('/logout', users.logout);
 
 router.get('/help', users.userHelp);
+
+router.get('/verify', catchAsync(users.verifyAccount));
+router.get('/resend', catchAsync(users.resendVerification));
+
+router.route('/recovery')
+     .get(users.renderRecovery)
+     .post(catchAsync(users.recoverPasswordVerify));
+
+router.get('/recovery/:hashId', catchAsync(users.recoverPassword));
+
+router.route('/user/:username/passwordchange')
+     .get(isLoggedIn, users.renderChange)
+     .post(isLoggedIn, catchAsync(users.changePassword));
 
 router.get('/user/:username', users.showUser);
 

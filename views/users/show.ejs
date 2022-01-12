@@ -26,10 +26,13 @@
         <p class="user-data">Rank:</p> <p id="rank-title">Newbie</p>
         <p class="user-data">Member since: </p> <p> <%= userData.createdAt ? (userData.createdAt.getFullYear() + '/' + (userData.createdAt.getMonth()+1) + '/' + userData.createdAt.getDate()) : 'Not known'; %></p>
         <div class="user-actions">
-            <button id="reportButton" class="btn btn-sm btn-danger" onClick="reportUserModal('<%= userData.username %>')">Report user</button>
+            <button id="reportButton" class="btn btn-sm btn-danger user-button" onClick="reportUserModal('<%= userData.username %>')">Report user</button>
             <% if(currentUser){ %>
-                <% if(currentUser.username === userData.username) { %> <button id="deleteButton" class="btn btn-sm btn-danger" onClick="deleteUserModal('<%= userData.username %>')">Delete account</button> <% } %>
-                <% if(userData.status !== 'active' && currentUser.username === userData.username) { %> <button id="confirmEmail" class="btn btn-sm btn-primary">Resend confirmation email</button> <% } %>
+                <% if(currentUser.username === userData.username) { %> 
+                    <button id="deleteButton" class="btn btn-sm btn-danger user-button" onClick="deleteUserModal('<%= userData.username %>')">Delete account</button> 
+                    <a href="/user/<%= userData.username %>/passwordchange" class="btn btn-sm btn-primary user-button">Change password</a> 
+                <% } %>
+                <% if(userData.status !== 'active' && currentUser.username === userData.username) { %> <a id="confirmEmail" href="/resend" class="btn btn-sm btn-primary user-button">Resend confirmation email</a> <% } %>
             <% } %>
         </div>
     </div>

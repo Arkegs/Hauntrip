@@ -1,0 +1,23 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="user-panel">
+    <img style="height: 250px; width: 250px;" src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <div class="panel">  
+        <h3>Password recover</h3>
+        <hr>
+        <form action="/recovery" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" name="email" id="email" required autofocus>
+                <div class="valid-feedback">
+                        Looks good!
+                </div>
+            </div>  
+            <div class="mb-3">
+                <label class="form-label" for="start">Birth Date</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+            </div>      
+            <button class="btn btn-success">Submit</button>
+        </form>
+    </div>
+</div>

@@ -46,25 +46,27 @@ function capitalizeFirstLetter(string) {
 
 var loads = 1;
 
-document.getElementById("loadMysteries").addEventListener("click", function(){
-    fetch(window.location.href + '/load?skip='+ loads*10)
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            var fetchedMysteries = data;
-            if(fetchedMysteries.length < 1){
-                document.getElementById('user-mysteries').innerHTML += ('<div class="loadButton">No more mysteries to load</div>');
-                document.getElementById("loadMysteries").style.display = "none"
-            } else{
-                for(let mystery of fetchedMysteries){
-                    let fullString = ('<a href="/mysteries/'+ mystery._id +'" class="single-mystery"><img style="width:100px; height: 100px;" src="'+ (mystery.image ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png') +'" alt=""><p>'+ mystery.title +'</p></a>');
-                    document.getElementById('user-mysteries').innerHTML += fullString;
+if(document.getElementById("loadMysteries") !== null){
+    document.getElementById("loadMysteries").addEventListener("click", function(){
+        fetch(window.location.href + '/load?skip='+ loads*10)
+            .then(res => {
+                return res.json();
+            })
+            .then(data => {
+                var fetchedMysteries = data;
+                if(fetchedMysteries.length < 1){
+                    document.getElementById('user-mysteries').innerHTML += ('<div class="loadButton">No more mysteries to load</div>');
+                    document.getElementById("loadMysteries").style.display = "none"
+                } else{
+                    for(let mystery of fetchedMysteries){
+                        let fullString = ('<a href="/mysteries/'+ mystery._id +'" class="single-mystery"><img style="width:100px; height: 100px;" src="'+ (mystery.image ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png') +'" alt=""><p>'+ mystery.title +'</p></a>');
+                        document.getElementById('user-mysteries').innerHTML += fullString;
+                    }
                 }
-            }
-        })
-        .catch(e =>{
-            console.log("Something went wrong on the request! ", e);
-        });
-    loads++;
-});
+            })
+            .catch(e =>{
+                console.log("Something went wrong on the request! ", e);
+            });
+        loads++;
+    });
+}

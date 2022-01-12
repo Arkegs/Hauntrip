@@ -69,7 +69,14 @@ module.exports.spookinessSchema = Joi.object({
 
 module.exports.reportSchema = Joi.object({
     report: Joi.object({
-        report: Joi.string().max(1500).required().escapeHTML(),
+        report: Joi.string().max(1500).required().escapeHTML()
+    }
+    ).required()
+});
+
+module.exports.newPasswordSchema = Joi.object({
+    password: Joi.object({
+        password: Joi.string().regex(/^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$/).required().escapeHTML()
     }
     ).required()
 });

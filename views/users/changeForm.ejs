@@ -1,0 +1,32 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="user-panel">
+    <img style="height: 250px; width: 250px;" src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <div class="panel">  
+        <h3>Password change</h3>
+        <hr>
+        <form action="/user/<%= currentUser.username %>/passwordchange" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="oldpassword">Insert your old password:</label>
+                <input class="form-control" type="password" name="oldpassword" id="oldpassword" maxlength="20" required>
+            </div>  
+            <div class="mb-3">
+                <label class="form-label" for="newpassword">Insert your new password:</label>
+                <input class="form-control" type="password" name="newpassword" id="newpassword" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" maxlength="20" required>
+            </div>
+            <div class="invalid-feedback">
+                Password must have 8 - 20 characters. Only letters, numbers and "-"
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="repeatpassword">Repeat your new password:</label>
+                <input class="form-control" type="password" name="repeatpassword" id="repeatpassword" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" maxlength="20" required>
+            </div>
+            <div class="invalid-feedback">
+                New passwords do not match.
+            </div>      
+            <button class="btn btn-success" id="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script src="/js/changePassword.js"></script>
