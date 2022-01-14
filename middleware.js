@@ -13,11 +13,26 @@ module.exports.isLoggedIn = (req, res, next) =>{
     next();
 }
 
+module.exports.isBanned = async (req, res, next) =>{
+    const bannedUser = await User.findOne({username: req.user.username}).exec();
+    if(parseInt(bannedUser.banned) > 0){
+        if(parseInt(bannedUser.banned) > 999){
+            return res.redirect(`/logout?b=999999`);
+        } else{
+            return res.redirect(`/logout?b=${bannedUser.banned}`);
+        }
+    }
+    next();
+}
+
 module.exports.checkUserStatus = async(req, res, next) =>{
     const checkedUser = await User.findById(req.user._id).exec();
     if(checkedUser.status === 'unconfirmed') {
         req.flash('error', 'You must first verify your email address to do that');
         return res.redirect(`/user/${req.user.username}`);
+    }
+    if(parseInt(checkedUser.banned) > 0 ){
+        return res.redirect('/logout');
     }
     console.log('User verified');
     next();

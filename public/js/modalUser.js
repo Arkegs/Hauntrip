@@ -14,7 +14,7 @@ function reportUserModal(param){
 
 function deleteUserModal(param){
     headerTitle.innerHTML = 'Delete Account'
-    modalInner.innerHTML = `<p> Are you sure you want to delete your account? All your mysteries and evidences will be deleted too</p> <form action="${param}" method="POST"> <button class="btn btn-danger">Delete</button></form>`
+    modalInner.innerHTML = `<p> Are you sure you want to delete your account? <b> All your mysteries, evidences and experience will be permanently deleted </b></p> <form action="/user/${param}?_method=DELETE" method="POST"><label class="form-label" for="password">Please, insert your password to confirm:</label><input  class="form-control" type="password" maxlength="20" name="password" id="password" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" required><button class="btn btn-danger">Delete Account</button></form>`
     modal.style.display = "block";
 }
 

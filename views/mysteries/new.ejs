@@ -33,14 +33,17 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location (Latitude, Longitude)</label>
-                <input class="form-control" placeholder="Latitude, Longitude" type="text" id="location" name="mystery[geometry]" pattern="^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$" required>
+                <div style="display: flex; width: 100%;">
+                    <input style="width:90%;" class="form-control" placeholder="Latitude, Longitude" type="text" id="location" name="mystery[geometry]" pattern="^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$" required>
+                    <button class="btn btn-sm btn-primary" style="width:10%;" id="getLocation"><i style="font-size: 1.5em;" class="fa fa-map-marker" aria-hidden="true"></i></button>
+                </div>
                 <div class="invalid-feedback">
                     Please provide a valid location.
                 </div>
             </div>
             <div id="map"></div>
             <div class="mt-3 mb-3">
-                <button class="btn btn-success">Add Mystery</button>
+                <button type="submit" class="btn btn-success">Add Mystery</button>
             </div>
         </form>
     </div>

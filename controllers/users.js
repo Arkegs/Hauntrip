@@ -4,6 +4,7 @@ const Evidence = require('../models/evidence');
 const Report = require('../models/report');
 const Verificator = require('../models/verificator');
 const nodemailer = require('nodemailer');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.renderRegister = (req, res) => {
     res.render('users/register');
@@ -37,7 +38,7 @@ module.exports.renderRecovery = (req, res) =>{
     res.render('users/recover');
 };
 
-module.exports.login = (req, res) =>{
+module.exports.login = async (req, res) =>{
     req.flash('success', 'Welcome back!');
     const redirectUrl = '/mysteries';
     delete req.session.returnTo;
@@ -46,8 +47,17 @@ module.exports.login = (req, res) =>{
 
 module.exports.logout = (req, res) => {
     req.logout();
+    if(req.query.b){
+        if(parseInt(req.query.b) < 999){
+            req.flash('error', `Your account is banned for ${req.query.b} days.`);
+            return res.redirect('/mysteries');
+        } if(parseInt(req.query.b) >= 999){
+            req.flash('error', `Your account has been permanently banned. How could that happen?`);
+            return res.redirect('/mysteries');
+        }
+    }
     req.flash('success', 'You are logged out. Good luck!');
-    res.redirect('/mysteries');
+    return res.redirect('/mysteries');
 };
 
 module.exports.showUser = async (req, res) => {
@@ -296,6 +306,77 @@ module.exports.changePassword = async (req, res) =>{
                     req.flash('error', `Something went wrong. Please, try again later.`);
                     return res.redirect(`/user/${req.user.username}`);
                 });
+}
+
+module.exports.normalDeleteUser = async (req, res) =>{
+    await User.findOne({username: req.user.username})
+    .then(foundUser => {
+        foundUser.changePassword(req.body.password, req.body.password)
+            .then(async () => {
+                await deleteUser(req.user._id, 'normalDelete');
+                req.flash('success', 'Your account has been deleted. We hope to see you again someday!');
+                return res.redirect('/mysteries');
+            })
+            .catch((err) =>{
+                req.flash('error', `Incorrect password.`);
+                return res.redirect(`/user/${req.user.username}`);
+            })
+        })
+        .catch((err)=>{
+            req.flash('error', `Something went wrong. Please, try again later.`);
+            return res.redirect(`/user/${req.user.username}`);
+        });
+}
+
+const deleteUser = async (userID, type) =>{
+    //All evidences, mysteries and images uploaded by the user must be deleted
+    let imagesToDelete = []; //All images IDs are saved so they are all bulk deleted at once later
+    let evidencesToDelete = []; //Same as images array, but with evidences
+    const userEvidences = await Evidence.find({author: userID}).exec();
+    const userMysteries = await Mystery.find({author: userID}).populate({
+        path: 'evidences',
+        populate:{
+            path: 'images'
+        }
+    }).exec();
+    if(userMysteries.length > 0){
+        //All Evidences within the User mysteries and its images must be deleted too
+        for(let mystery of userMysteries){
+            if(mystery.image.url){
+                imagesToDelete.push(mystery.image.filename);
+            }
+            if(mystery.evidences.length > 0){
+                for(let evidence of mystery.evidences){
+                    evidencesToDelete.push(evidence._id);
+                    if(evidence.images.length > 0){
+                        for(let image of evidence.images){
+                            imagesToDelete.push(image.filename);
+                        }
+                    }
+                }
+            }
+        }
+        await Evidence.deleteMany({_id: {$in: evidencesToDelete}});
+        await Mystery.deleteMany({author: userID});
+    }
+    //After all is clean, evidences posted by the user in any mystery must be deleted along with its images
+    if(userEvidences.length > 0){
+        for(let evidence of userEvidences){
+            for(let image of evidence.images){
+                imagesToDelete.push(image.filename);
+            }
+        }
+        await Evidence.deleteMany({author: userID});
+    }
+    //Finally, all images are removed from Cloudinary, and the user credentials are deleted at last
+    if(imagesToDelete.length > 0){
+        await cloudinary.api.delete_resources(imagesToDelete, function(error, result){console.log(result);});
+    }
+    if(type === "permaban"){
+        await User.findByIdAndUpdate(userID, {banned: 999999, status: 'banned'});
+    } else{
+        await User.findByIdAndDelete(userID).exec();
+    }
 }
 
 const verifyMail = async (userMail, username) => {

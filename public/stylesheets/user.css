@@ -203,4 +203,7 @@
     .single-mystery p{
         max-width:60%;
     }
+    .modal-content {
+        width: 80%;
+    }
 }

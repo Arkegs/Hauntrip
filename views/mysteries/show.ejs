@@ -43,6 +43,7 @@
                 <h5>Location: </h5>
                 <p><%= mystery.location %></p>
                 <div id="map"></div>
+                <a style="margin-top: 10px;" class="btn btn-sm btn-primary" target="_blank" href="https://www.google.cl/maps/place/<%= mystery.geometry.coordinates[1] + ',' + mystery.geometry.coordinates[0] %>">View on Google Maps</a>
             </div>
             <div class="summary-item">
                 <h5>Created at:</h5>
