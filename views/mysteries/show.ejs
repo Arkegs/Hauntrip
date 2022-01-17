@@ -120,7 +120,7 @@
                                     </form>
                                 </div>
                                 <div class="evidence-report">
-                                    <button onClick="reportModal('<%= evidence._id %>')" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
+                                    <button onClick="reportModal(['<%= evidence._id %>', '<%= mystery._id %>'])" class="transparent-btn"><i class="fa fa-flag-o" aria-hidden="true"></i></button>  
                                     <% if(currentUser && (evidence.author.equals(currentUser._id) || currentUser.isAdmin === true)){ %>
                                     <button onClick="deleteEvidenceModal('/mysteries/<%= mystery._id %>/evidences/<%= evidence._id %>?_method=DELETE')" class="transparent-btn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
                                     <% } %>
@@ -146,3 +146,4 @@
 <script src="/js/loader.js"></script>
 <script src="/js/modal.js"></script>
 <script src="/js/helpfulness.js"></script>
+<script>document.title = '<%= mystery.title %> | Hauntrip' </script>

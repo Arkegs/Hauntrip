@@ -25,6 +25,7 @@ const Evidence = require('./models/evidence')
 const userRoutes = require('./routes/users');
 const mysteriesRoutes = require('./routes/mysteries');
 const evidencesRoutes = require('./routes/evidences');
+const adminRoutes = require('./routes/admin');
 
 mongoose.connect('mongodb://localhost:27017/hauntrip', { useUnifiedTopology: true })
 .then(() => {
@@ -143,10 +144,17 @@ app.use((req, res, next) => {
 app.use('/', userRoutes);
 app.use('/mysteries', mysteriesRoutes);
 app.use('/mysteries/:id/evidences', evidencesRoutes);
+app.use('/adminpanel', adminRoutes);
 
 
 app.get('/', (req, res) => {
-    res.render('home');
+    if(!req.user){
+        res.render('home');
+    }
+    else{
+        res.redirect('/mysteries');
+    }
+    
 });
 
 app.all('*', (req, res, next) => {

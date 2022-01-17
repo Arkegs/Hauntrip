@@ -110,14 +110,16 @@ module.exports.rateEvidence = async (req, res) => {
 
 module.exports.deleteEvidence = async (req, res) =>{
     await Mystery.findByIdAndUpdate(req.params.id, {$pull: { evidences: req.params.evidenceId }});
-    const evidence = findById(req.params.evidenceId);
+    const evidence = Evidence.findById(req.params.evidenceId);
     let imagesToDelete = [];
-    if(evidence.images.length > 0){
-        for(let image of evidence.images){
-            imagesToDelete.push(image.filename);
+    if(evidence.images){
+        if(evidence.images.length > 0){
+            for(let image of evidence.images){
+                imagesToDelete.push(image.filename);
+            }
         }
+        await cloudinary.api.delete_resources(imagesToDelete, function(error, result){console.log(result);});
     }
-    await cloudinary.api.delete_resources(imagesToDelete, function(error, result){console.log(result);});
     await Evidence.findByIdAndDelete(req.params.evidenceId);
     await Helpfulness.deleteMany({evidence: req.params.evidenceId});
     req.flash('success', 'Evidence was successfully deleted');

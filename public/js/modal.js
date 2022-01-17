@@ -8,7 +8,7 @@ var span = document.getElementsByClassName("close")[0];
 
 function reportModal(param){
     headerTitle.innerHTML = 'Report Evidence'
-    modalInner.innerHTML = `<p> Thanks for your concern. Please, explain the issue and we will investigate it as soon as possible. </p> <form action="/report/evidence/${param}" method="POST"> <textarea class="form-control" placeholder="Write your report here" type="text" id="report" name="report" maxlength="1000" required></textarea> <button class="btn btn-small btn-primary" type="submit"> Submit </button></form>`
+    modalInner.innerHTML = `<p> Thanks for your concern. Please, explain the issue and we will investigate it as soon as possible. </p> <form action="/report/evidence/${param[0]}/${param[1]}" method="POST"> <textarea class="form-control" placeholder="Write your report here" type="text" id="report" name="report" maxlength="1000" required></textarea> <button class="btn btn-small btn-primary" type="submit"> Submit </button></form>`
     modal.style.display = "block";
 }
 

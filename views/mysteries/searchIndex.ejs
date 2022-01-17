@@ -49,7 +49,7 @@
                 <% if(currentPage + 2 < totalPages - 1){ %>
                     <p>...</p>
                 <% } %>
-                <% if(currentPage <= totalPages){ %>
+                <% if(currentPage <= totalPages  && totalPages > 1){ %>
                     <a class="paginate-number <% if(currentPage === totalPages){ %> selected-page <% } %>" href="?page=<%= totalPages %>"><%= totalPages%></a>
                     <% if(currentPage !== totalPages){ %>
                     <a class="paginate-number" href="?page=<%= currentPage+1 %>">&gt;</a>
@@ -65,3 +65,5 @@
     const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
     const mysteries = {features: <%- JSON.stringify(mysteries) %>}
 </script>
+
+<script>document.title = 'Mysteries | Hauntrip' </script>

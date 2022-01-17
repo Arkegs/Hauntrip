@@ -1,10 +1,11 @@
 body{
     height:100vh;
     background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-    url(https://images.unsplash.com/photo-1494376877685-d3d2559d4f82?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80);
+    url('/multimedia/hauntrip-home.png');
     background-size: cover;
     background-position: center;
     text-shadow: 0 0.05rem 0.1rem rbga(0,0,0,0.5);
+    font-family: helvetica,arial,sans-serif;
 }
 
 .cover{
@@ -42,24 +43,24 @@ hr.vertical {
     border:1px solid white;
 }
 
-.btn-default{
+.btn-mysteries{
     background-color: #444444;
     color:#FFF;
     border-color: #2b2b2b;
 }
  
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open .dropdown-toggle.btn-default {
+.btn-mysteries:hover, .btn-mysteries:focus, .btn-mysteries:active, .btn-mysteries.active, .open .dropdown-toggle.btn-mysteries {
     background-color: #2b2b2b;
     color:#FFF;
     border-color: #202020;
 }
 
-.btn-success{
+.btn-login{
     background-color: #1b1b1b;
     border-color: #020202;
 }
 
-.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .open .dropdown-toggle.btn-success {
+.btn-login:hover, .btn-login:focus, .btn-login:active, .btn-login.active, .open .dropdown-toggle.btn-login {
     background-color:#020202;
     color:#FFF;
     border-color: #000000;

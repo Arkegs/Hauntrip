@@ -1,0 +1,60 @@
+<% layout('./layouts/boilerplate') %>
+
+<div class="main">
+    <div class="side-menu">
+        <h3 class="side-title">Admin actions</h3>
+        <div class="side-buttons">
+            <a class="search-button" href="/adminpanel/all">View all reports</a>
+            <a class="search-button" href="/adminpanel/user">Reported users</a>
+            <a class="search-button" href="/adminpanel/mystery">Reported mysteries</a>
+            <a class="search-button" href="/adminpanel/evidence">Reported evidences</a>
+            <a class="search-button" href="/adminpanel/banpanel">Search and ban user</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="container w-100">
+            <h1>Ban user</h1>
+            <form action="/adminpanel/banpanel" method="POST">
+                <div class="mb-3">
+                    <label class="form-label" for="username">Username to ban</label>
+                    <input class="form-control" type="text" name="username" id="username" required>
+                    <div class="valid-feedback">
+                            Looks good!
+                    </div>
+                </div>  
+                <div class="mb-3">
+                    <label class="form-label" for="password">How many days? (Type 9999999 or greater for permaban)</label>
+                    <input class="form-control" type="number" name="days" id="days" min="0" maxlength="14" max="99999999999999" required>
+                    <div class="valid-feedback">
+                            Looks good!
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="deleteEverything">Delete all user mysteries, evidences and images?</label>
+                    <div>
+                        <label><input onClick="securityOff()" type="radio" id="noDelete" name="deleteEverything" value="no" required checked="checked">Do not delete anything</label>
+                        <label><input onClick="deleteSecurity()" type="radio" id="deleteAll" name="deleteEverything" value="yes"> Delete everything</label>
+                    </div>
+                </div>
+                <div id="security">
+
+                </div>  
+                <button class="btn btn-success" type="submit">Ban user</button>  
+            </form>   
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.title = 'Hauntrip' 
+    const securityDoc = document.getElementById('security');
+    const deleteSecurity = function(){
+        alert('CAREFUL! YOU ARE ABOUT TO DELETE EVERYTHING OF THIS USER. IF YOU ARE SURE ABOUT THIS, THEN PROCEED');
+        securityDoc.innerHTML = '<label class="form-label" for="securityfield">Type the word BANUSER all caps if you want to delete everything</label> <input class="form-control" type="text" name="securityfield" id="securityfield" pattern="BANUSER" required>'
+    }
+    const securityOff = function(){
+        securityDoc.innerHTML = '';
+    }
+</script>

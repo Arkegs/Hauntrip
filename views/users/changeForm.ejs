@@ -13,20 +13,21 @@
             <div class="mb-3">
                 <label class="form-label" for="newpassword">Insert your new password:</label>
                 <input class="form-control" type="password" name="newpassword" id="newpassword" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" maxlength="20" required>
-            </div>
-            <div class="invalid-feedback">
-                Password must have 8 - 20 characters. Only letters, numbers and "-"
+                <div class="invalid-feedback">
+                    Password must have 8 - 20 characters. Only letters, numbers and "-"
+                </div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="repeatpassword">Repeat your new password:</label>
-                <input class="form-control" type="password" name="repeatpassword" id="repeatpassword" pattern="^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9-]+(?<![_.])$" maxlength="20" required>
+                <input class="form-control" type="password" name="repeatpassword" id="repeatpassword" maxlength="20" required>
+                <div class="invalid-feedback">
+                    New passwords do not match.
+                </div>      
             </div>
-            <div class="invalid-feedback">
-                New passwords do not match.
-            </div>      
             <button class="btn btn-success" id="submit">Submit</button>
         </form>
     </div>
 </div>
 
 <script src="/js/changePassword.js"></script>
+<script>document.title = 'User configuration | Hauntrip' </script>

@@ -19,14 +19,12 @@ map.on('click', (e) => {
     let selectMarker = new mapboxgl.Marker();
     selectMarker.setLngLat(e.lngLat)
         .addTo(map);
-    console.log(e.lngLat);
 });
 
 locationInput.addEventListener('input', (e) => {
     e.stopPropagation();
     if(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i.test(String(locationInput.value))){
         let longlat = {lng: parseFloat(locationInput.value.split(',')[1]), lat: parseFloat(locationInput.value.split(',')[0])};
-        console.log(longlat);
         let markers = document.getElementsByClassName('mapboxgl-marker mapboxgl-marker-anchor-center');
         if(markers.length > 0){
             markers[0].remove();
@@ -47,7 +45,6 @@ getLocation.addEventListener('click', function(e) {
       currentPos = position;
       document.getElementById('location').value = currentPos.coords.latitude + ',' + currentPos.coords.longitude;
       let longlat = {lng: parseFloat(currentPos.coords.longitude), lat: parseFloat(currentPos.coords.latitude)};
-      console.log(longlat);
       let markers = document.getElementsByClassName('mapboxgl-marker mapboxgl-marker-anchor-center');
       if(markers.length > 0){
           markers[0].remove();

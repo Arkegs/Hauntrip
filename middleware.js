@@ -1,4 +1,4 @@
-const { mysterySchema, updateMysterySchema, evidenceSchema, spookinessSchema, userSchema, reportSchema } = require('./validationSchemas.js');
+const { mysterySchema, updateMysterySchema, evidenceSchema, spookinessSchema, userSchema, reportSchema, newPasswordSchema } = require('./validationSchemas.js');
 const ExpressError = require('./utils/ExpressError');
 const Mystery = require('./models/mystery');
 const Evidence = require('./models/evidence');
@@ -34,13 +34,11 @@ module.exports.checkUserStatus = async(req, res, next) =>{
     if(parseInt(checkedUser.banned) > 0 ){
         return res.redirect('/logout');
     }
-    console.log('User verified');
     next();
 }
 
 module.exports.validateUser = (req, res, next) => {
     const userBody = {user : {username: req.body.username, password: req.body.password, email: req.body.email, birthdate: req.body.birthdate}};
-    console.log(userBody);
     const { error } = userSchema.validate(userBody);
     if(error){
         //const msg = error.details.map(el => el.message).join('.');
@@ -125,4 +123,29 @@ module.exports.validateReport = (req, res, next) =>{
     } else{
         next();
     }
+}
+
+module.exports.validatePassword = (req, res, next) =>{
+    const { error } = newPasswordSchema.validate({password: {password: req.body.newpassword}});
+    if(error){
+        const msg = 'Data is not valid';
+        throw new ExpressError(msg, 400);
+    } else{
+        next();
+    }
+}
+
+module.exports.isAdmin = (req, res, next) => {
+    const err = {message: 'Page not found', stack: 'Error: Page not found at C:\\Hauntrip\\index.js:161:10 at Layer.handle [as handle_request] (C:\\Hauntrip\\node_modules\\express\\lib\router\\layer.js:95:5) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:137:13) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at next (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:131:14) at Route.dispatch (C:\\Hauntrip\\node_modules\\express\\lib\\router\\route.js:112:3)'}
+    if(!req.isAuthenticated()){
+        return res.render('error', {err});
+    }
+    if(!req.user.isAdmin){
+        return res.render('error', {err});
+    }
+    const adminUser = User.findById(req.user._id).exec();
+    if(!adminUser){
+        return res.render('error', {err});
+    }
+    next();
 }

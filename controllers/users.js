@@ -89,7 +89,7 @@ module.exports.userHelp = (req, res) =>{
 }
 
 module.exports.reportMystery = async (req, res) =>{
-    const reportedMystery = await Mystery.findOne({_id: req.params.reportedId}).exec();
+    const reportedMystery = await Mystery.findOne({_id: req.params.reportedId}).populate('author', 'username').exec();
     if(!reportedMystery){
         req.flash('error', 'Report could not be submitted. Please try again later');
         return res.redirect('back');
@@ -98,24 +98,31 @@ module.exports.reportMystery = async (req, res) =>{
     report.reportType = 'mystery',
     report.reportedElement = req.params.reportedId;
     report.author = req.user._id;
-    report.accused = reportedMystery.author;
-    console.log(report);
+    report.authorName = req.user.username;
+    report.accused = reportedMystery.author._id;
+    report.accusedName = reportedMystery.author.username;
+    console.log('Report OK');
     await report.save();
     req.flash('success', 'Your report has been successfully submitted');
     return res.redirect('back');
 }
 
 module.exports.reportEvidence = async (req, res) =>{
-    const reportedEvidence = await Evidence.findOne({_id: req.params.reportedId}).exec();
-    if(!reportedEvidence){
+    const reportedEvidence = await Evidence.findOne({_id: req.params.reportedId}).populate('author', 'username').exec();
+    const reportedMystery = await Mystery.findOne({_id: req.params.mysteryId}).exec();
+    if(!reportedEvidence || !reportedMystery){
         req.flash('error', 'Report could not be submitted. Please try again later');
         return res.redirect('back');
     }
     const report = new Report({report: req.body.report});
     report.reportType = 'evidence',
-    report.author = req.user._id;
     report.reportedElement = req.params.reportedId;
-    report.accused = reportedEvidence.author;
+    report.author = req.user._id;
+    report.authorName = req.user.username;
+    report.accused = reportedEvidence.author._id;
+    report.accusedName = reportedEvidence.author.username;
+    report.evidenceContent = reportedEvidence.body;
+    report.mystery = req.params.mysteryId;
     await report.save();
     req.flash('success', 'Your report has been successfully submitted');
     return res.redirect('back');
@@ -130,8 +137,10 @@ module.exports.reportUser = async (req, res) =>{
     const report = new Report({report: req.body.report});
     report.reportType = 'user',
     report.author = req.user._id;
+    report.authorName = req.user.username;
     report.accused = reportedUser._id;
-    console.log(report);
+    report.accusedName = reportedUser.username;
+    console.log('Report OK');
     await report.save();
     req.flash('success', 'Your report has been successfully submitted');
     return res.redirect('back');
@@ -169,7 +178,6 @@ module.exports.resendVerification = async (req, res) =>{
         return res.redirect('/user/' + req.user.username);
     }
     const verifyUser = await User.findOne({username: req.user.username}).exec();
-    console.log(verifyUser);
     sendMail(verifyUser.email, verifyUser.username, verifyMail.activationKey);
     await Verificator.findByIdAndUpdate(verifyMail._id, {attempts: (parseInt(verifyMail.attempts) + 1)});
     req.flash('success', `A verification email was sent to ${verifyUser.email}. Please, remember to check your Spam too.`);
@@ -229,9 +237,7 @@ module.exports.recoverPassword = async (req, res) =>{
         req.flash('error', `Bad request.`);
         return res.redirect('/login');
     }
-    console.log(req.params.hashId);
     const verificator = await Verificator.findOne({activationKey: req.params.hashId, newUser: req.query.u});
-    console.log(verificator);
     if(!verificator){
         req.flash('error', `Verification code is not valid.`);
         return res.redirect('/login');
@@ -298,7 +304,7 @@ module.exports.changePassword = async (req, res) =>{
                         return res.redirect(`/user/${req.user.username}`);
                     })
                     .catch((err) =>{
-                        req.flash('error', `Something went wrong. Please, try again later.`);
+                        req.flash('error', `Incorrect password`);
                         return res.redirect(`/user/${req.user.username}`);
                     })
                 })
@@ -370,7 +376,7 @@ const deleteUser = async (userID, type) =>{
     }
     //Finally, all images are removed from Cloudinary, and the user credentials are deleted at last
     if(imagesToDelete.length > 0){
-        await cloudinary.api.delete_resources(imagesToDelete, function(error, result){console.log(result);});
+        await cloudinary.api.delete_resources(imagesToDelete, function(error, result){console.log('ok');});
     }
     if(type === "permaban"){
         await User.findByIdAndUpdate(userID, {banned: 999999, status: 'banned'});

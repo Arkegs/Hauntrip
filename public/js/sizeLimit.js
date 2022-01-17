@@ -15,15 +15,3 @@ uploadField.onchange = function() {
         this.value = "";
     }
 };
-
-const getLocation = document.getElementById("getLocation");
-getLocation.addEventListener('click', function(e) {
-    e.preventDefault();
-    var currentPos;
-    var geoSuccess = function(position) {
-      currentPos = position;
-      document.getElementById('location').value = currentPos.coords.latitude + ',' + currentPos.coords.longitude;
-    };
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  }
-)
