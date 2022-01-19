@@ -213,6 +213,41 @@ body{
     position: relative;
 }
 
+.hauntrip-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hauntrip-help-menu{
+    position: fixed;
+    top: 200px;
+    display: flex;
+    width: 25%;
+    margin-right: 20px;
+    flex-direction: column;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(40, 40, 40);
+    box-shadow: 0 0.2rem 1.2rem rgba(0,0,0,0.2);
+}
+
+.hauntrip-help-menu a{
+    text-decoration: none;
+}
+
+.hauntrip-help{
+    width: 65%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    border-left: none;
+    background-color: rgb(255, 255, 255);
+    color: rgb(40, 40, 40);
+    box-shadow: 0 0.2rem 1.2rem rgba(0,0,0,0.2);
+}
+
 @media screen and (max-width: 1400px) {
     .mystery-photo-caption{
         margin-top: 10px;
@@ -261,6 +296,18 @@ body{
     }
     .mystery-photo-caption{
         margin-top: 10px;
+    }
+    .hauntrip-container{
+        justify-content: center;
+        width: 90%;
+    }
+    
+    .hauntrip-help-menu{
+        display: none;
+    }
+    
+    .hauntrip-help{
+        width: 100%;
     }
 }
 

@@ -17,6 +17,7 @@ const User = require('./models/user')
 
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
+const MongoDBStore = require('connect-mongo')(session);
 
 const methodOverride = require('method-override');
 const Mystery = require('./models/mystery');
@@ -27,7 +28,7 @@ const mysteriesRoutes = require('./routes/mysteries');
 const evidencesRoutes = require('./routes/evidences');
 const adminRoutes = require('./routes/admin');
 
-mongoose.connect('mongodb://localhost:27017/hauntrip', { useUnifiedTopology: true })
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_KEY}@cluster0.i4xd8.mongodb.net/hauntrip?retryWrites=true&w=majority`, { useUnifiedTopology: true })
 .then(() => {
     console.log("MONGO CONNECTION OPEN!!!")
 })
@@ -35,6 +36,7 @@ mongoose.connect('mongodb://localhost:27017/hauntrip', { useUnifiedTopology: tru
     console.log("Error, MONGO CONNECTION!!!!")
     console.log(err)
 })
+
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -54,7 +56,18 @@ app.use(methodOverride('_method'));
 app.use(mongoSanitize());
 app.use(require("body-parser").json());
 
+const store = new MongoDBStore({
+    url: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_KEY}@cluster0.i4xd8.mongodb.net/hauntrip?retryWrites=true&w=majority`,
+    secret: process.env.SESSION_SECRET,
+    touchAfter: 7*24*60*60
+});
+
+store.on("error", function(e){
+    console.log("SESSION STORE ERROR");
+})
+
 const sessionConfig = {
+    store: store,
     name: 'session',
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -67,8 +80,6 @@ const sessionConfig = {
     }
 };
 
-
-
 app.use(session(sessionConfig));
 app.use(flash());
 
@@ -79,7 +90,9 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com",
     "https://cdnjs.cloudflare.com",
     "https://cdn.jsdelivr.net",
-    "https://cdnjs.cloudflare.com"
+    "https://cdnjs.cloudflare.com",
+    "https://www.google.com/recaptcha/",
+    "https://www.gstatic.com/recaptcha/"
 ];
 const styleSrcUrls = [
     "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css",
@@ -104,6 +117,10 @@ const fontSrcUrls = [
     "https://fontawesome.com/"
 
 ];
+const frameSrcUrls = [
+    "https://www.google.com/recaptcha/",
+    "https://recaptcha.google.com/recaptcha/"
+]
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -114,6 +131,7 @@ app.use(
             workerSrc: ["'self'", "blob:"],
             childSrc: ["blob:"],
             objectSrc: [],
+            frameSrc: [...frameSrcUrls],
             imgSrc: [
                 "'self'",
                 "blob:",

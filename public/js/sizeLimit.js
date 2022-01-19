@@ -15,3 +15,4 @@ uploadField.onchange = function() {
         this.value = "";
     }
 };
+

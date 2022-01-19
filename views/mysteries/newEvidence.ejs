@@ -1,8 +1,10 @@
 <% layout('./layouts/boilerplate') %>
 <link rel="stylesheet" href="/stylesheets/evidence.css">
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="user-panel">
-    <img src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <img style="min-width: 200px; min-height:200px" src="/multimedia/evidence-logo.png">
     <div class="panel">  
         <h1>New Evidence</h1>
         <form class="mb-3 validated-form" action="/mysteries/<%= mystery %>/evidences" enctype="multipart/form-data" method="POST" novalidate>
@@ -25,11 +27,15 @@
                 <label class="form-label form-custom-title" for="images">Images (3 images max, 1MB each)</label>
                 <input type="file" name="images" id="images" multiple />
             </div>
-            <button class="btn btn-primary">Submit</button>
+            <div style="margin-top: 10px; margin-bottom: 10px;" class="g-recaptcha" data-sitekey="6Lc5kCAeAAAAACVK7NqZL_B8TvRdnSAkS3tpGV8U"></div>
+            <div class="mt-3 mb-3">
+                <button type="submit" class="btn btn-success">Add Evidence</button>
+            </div>
         </form>
     </div>
 </div>
 
 </script>
 <script src="/js/multiSizeLimit.js"></script>
+<script src="/js/recaptcha.js"></script>
 <script>document.title = 'New Evidence | Hauntrip' </script>

@@ -43,7 +43,7 @@
         <div id="user-mysteries" class="user-mysteries">
             <% for(let mystery of userMysteries){ %>
                 <a href="/mysteries/<%= mystery._id %>" class="single-mystery">
-                    <img style="width:100px; height: 100px;" src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="">
+                    <img style="width:100px; height: 100px;" src="<%= mystery.image.url ? mystery.image.url : '/multimedia/unavailable-image.png' %>" alt="">
                     <p><%= mystery.title %></p>
                 </a>
             <% } %>

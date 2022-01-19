@@ -4,12 +4,26 @@ const User = require('../models/user');
 const Helpfulness = require('../models/helpfulness');
 const { ObjectId } = require('mongodb');
 const { cloudinary } = require('../cloudinary');
+const axios = require('axios');
 
 module.exports.renderNewForm = (req, res) =>{
     res.render('mysteries/newEvidence', {mystery: req.params.id});
 }
 
 module.exports.createEvidence = async (req, res) => {
+    const captchaCheck = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.VERIFY_CAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+        },
+    );
+    if(!captchaCheck.data.success){
+        req.flash('error', 'ReCaptcha failed. Please, try again');
+        res.redirect(`back`);
+    }
     const mystery = await Mystery.findById(req.params.id);
     const evidence = new Evidence(req.body.evidence);
     evidence.author = req.user._id;

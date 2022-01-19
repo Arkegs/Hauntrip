@@ -5,6 +5,7 @@ const Evidence = require('../models/evidence');
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geocoder = mbxGeocoding({accessToken: mapBoxToken});
+const axios = require('axios');
 const { cloudinary } = require('../cloudinary');
 const { ObjectId } = require('mongodb');
 
@@ -19,13 +20,13 @@ module.exports.renderSpooky = async(req, res) => {
         pageNum = parseInt(req.query.page);
     }
     if(!pageNum){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
     const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {spookiness: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
-    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Spookiest mysteries' });
+    return res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Spookiest mysteries' });
 };
 
 module.exports.renderRecent = async(req, res) => {
@@ -34,13 +35,13 @@ module.exports.renderRecent = async(req, res) => {
         pageNum = parseInt(req.query.page);
     }
     if(!pageNum){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
     const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {createdAt: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
-    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most recent mysteries' });
+    return res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most recent mysteries' });
 };
 
 module.exports.renderCredibility = async(req, res) => {
@@ -49,21 +50,34 @@ module.exports.renderCredibility = async(req, res) => {
         pageNum = parseInt(req.query.page);
     }
     if(!pageNum){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
     const mysteries = await Mystery.paginate({},{page: pageNum, limit:4, sort: {credibility: 'desc',  "_id" : 'asc'}});
     if(mysteries.docs.length < 1){
-        res.redirect('/mysteries');
+        return res.redirect('/mysteries');
     }
-    res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most credible mysteries' });
+    return res.render('mysteries/searchIndex', { mysteries: mysteries.docs, totalPages: mysteries.totalPages, currentPage: mysteries.page, searchTitle: 'Most credible mysteries' });
 };
 
 module.exports.renderNewForm = (req, res) => {
-    res.render('mysteries/new');
+    return res.render('mysteries/new');
 };
 
 module.exports.createMystery = async (req, res, next) => {
     // if(!req.body.mystery) throw new ExpressError('Invalid mystery data', 400);
+    const captchaCheck = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.VERIFY_CAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+        },
+    );
+    if(!captchaCheck.data.success){
+        req.flash('error', 'ReCaptcha failed. Please, try again');
+        res.redirect(`back`);
+    }
     const mystery = new Mystery(req.body.mystery);
     mystery.geometry = {type: 'Point', coordinates: req.body.mystery.geometry.split(',').reverse()};
     const location = await geocoder.reverseGeocode({
@@ -143,6 +157,19 @@ module.exports.renderEditForm = async (req, res) => {
 };
 
 module.exports.updateMystery = async (req, res) => {
+    const captchaCheck = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.VERIFY_CAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+        },
+    );
+    if(!captchaCheck.data.success){
+        req.flash('error', 'ReCaptcha failed. Please, try again');
+        res.redirect(`back`);
+    }
     const { id } = req.params;
     const mystery = await Mystery.findByIdAndUpdate(id, {... req.body.mystery});
     if(req.file){
@@ -241,3 +268,4 @@ module.exports.deleteImage = async (req, res) => {
         return res.redirect(`${id}/edit`);
     }
 };
+

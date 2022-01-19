@@ -56,7 +56,7 @@
             <h2><%= mystery.title %></h2>
             <p class="author-name">By <a href="/user/<%= mystery.author.username %>"><%= mystery.author.username %></a></p>
             <div class="img-container">
-                <img src="<%= mystery.image.url ? mystery.image.url : 'https://res.cloudinary.com/arkeg/image/upload/v1638555012/Hauntrip/General/unavailable-2_plmphn.png' %>" alt="...">
+                <img src="<%= mystery.image.url ? mystery.image.url : '/multimedia/unavailable-image.png' %>" alt="...">
             </div>
             <h4>Description</h4>
             <p class="mystery-body"><%= mystery.description %></p>

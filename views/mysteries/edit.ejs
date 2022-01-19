@@ -1,5 +1,7 @@
 <% layout('./layouts/boilerplate') %>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="row">
     <h1 class="text-center">Edit Mystery</h1>
     <div class="col-md-8 offset-md-2">
@@ -23,7 +25,8 @@
                 <input class="form-control" type="file" id="image" name="image">
             </div>
             <div class="mb-3">
-                <button class="btn btn-success">Edit Mystery</button>
+                <div class="g-recaptcha" style="margin-top: 10px; margin-bottom: 10px;" data-sitekey="6Lc5kCAeAAAAACVK7NqZL_B8TvRdnSAkS3tpGV8U"></div>
+                <button type="submit" class="btn btn-success">Edit Mystery</button>
                 <a class="btn btn-danger" href="/mysteries/<%= mystery._id%>">Go back</a>
             </div>
         </form>
@@ -42,4 +45,5 @@
 </div>
 
 <script src="/js/sizeLimit.js"></script>
+<script src="/js/recaptcha.js"></script>
 <script>document.title = 'Edit Mystery | Hauntrip' </script>

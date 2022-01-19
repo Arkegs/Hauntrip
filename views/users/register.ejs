@@ -1,7 +1,9 @@
 <% layout('layouts/boilerplate') %>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="user-panel">
-    <img src="https://image.flaticon.com/icons/png/512/98/98415.png">
+    <img style="min-width: 200px; min-height:200px;" src="/multimedia/login-logo.png">
     <div class="panel">  
         <h3>Register</h3>
         <hr>
@@ -41,15 +43,17 @@
                 </div>
             </div>      
             <div class="mb-3">
-                <label class="form-label" for="terms"><input type="checkbox" value="accept" id="terms" name="terms" required> I have read and agree with the Hauntrip <a href="/help">Terms and Conditions and Privacy Policy</a>  </label>
+                <label class="form-label" for="terms"><input type="checkbox" value="accept" id="terms" name="terms" required> I have read and agree with the Hauntrip <a href="/help#user-responsibilities">Terms and Conditions and Privacy Policy</a>  </label>
                 <div class="invalid-feedback">
                     You must agree with our Terms and Conditions, and our Privacy Policy
                 </div>
             </div>    
-            <button id="submitButton" class="btn btn-success">Register</button>
+            <div class="g-recaptcha" style="margin-top: 10px; margin-bottom: 10px;" data-sitekey="6Lc5kCAeAAAAACVK7NqZL_B8TvRdnSAkS3tpGV8U"></div>
+            <button type="submit" id="submitButton" class="btn btn-success">Register</button>
         </form>
     </div>
 </div>
 
 <script src="/js/register.js"></script>
+<script src="/js/recaptcha.js"></script>
 <script>document.title = 'Register | Hauntrip' </script>

@@ -5,12 +5,28 @@ const Report = require('../models/report');
 const Verificator = require('../models/verificator');
 const nodemailer = require('nodemailer');
 const { cloudinary } = require('../cloudinary');
+const axios = require('axios');
 
 module.exports.renderRegister = (req, res) => {
     res.render('users/register');
 };
 
 module.exports.register = async (req, res, next) => {
+    const captchaCheck = await axios.post(
+        `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.VERIFY_CAPTCHA_SECRET}&response=${req.body['g-recaptcha-response']}`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8"
+          },
+        },
+    );
+    if(!captchaCheck.data.success){
+        req.flash('error', 'ReCaptcha failed. Please, try again');
+        res.redirect(`back`);
+    }
+    console.log("A VER QUE PASA");
+    console.log(captchaCheck);
     try{
         const {email, username, password, birthdate} = req.body;
         const user = new User({email, username, birthdate});
@@ -405,7 +421,8 @@ const sendMail = async(userMail, username, hash) =>{
           pass: process.env.MAIL_PASSWORD,
           clientId: process.env.OAUTH_CLIENTID,
           clientSecret: process.env.OAUTH_CLIENT_SECRET,
-          refreshToken: process.env.OAUTH_REFRESH_TOKEN
+          refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+          accessToken: process.env.OAUTH_ACCESS_TOKEN,
         }
     });
     let mailOptions = {
@@ -422,3 +439,4 @@ const sendMail = async(userMail, username, hash) =>{
         }
     });
 }
+

@@ -1,26 +1,146 @@
 <% layout('./layouts/boilerplate') %>
 
-<div class="container">
-    <h1>Help and support</h1>
+<h1>Help and support</h1>
+<div class="hauntrip-help-menu">
+    <a href="#about">1. About Hauntrip</a>
+    <a href="#what-is-hauntrip">1.1. What is Hauntrip</a>
+    <a href="#what-are-mysteries">1.2. What are Mysteries</a>
+    <a href="#mystery-credibility">1.2-1. Mystery credibility</a>
+    <a href="#mystery-spookiness">1.2-2. Mystery spookiness</a>
+    <a href="#what-are-evidences">1.3. What are Evidences</a>
+    <a href="#evidence-helpfulness">1.3-1. Evidence Helpfulness</a>
+    <a href="#user-account">1.4. User account</a>
+    <a href="#experience-points">1.4-1. Experience points</a>
+    <a href="#account-deletion">1.4.2. Account deletion</a>
+    <a href="#report-system">1.5. Report system</a>
+    <a href="#account-banning">1.6. Account banning</a>
+    <a href="#user-responsibilities">2. User responsibilities</a>
+    <a href="#terms-and-conditions">2.1. Terms and conditions</a>
+    <a href="#privacy-policy">2.2. Privacy policy</a>
+    <a href="#conditions">2.3. Conditions</a>
+    <a href="#contact">2.4. Contact</a>
+</div>
+<div class="hauntrip-container container">
 
+    
     <div class="hauntrip-help">
-        <h2>About Hauntrip</h2>
-        <h3>What is Hauntrip</h3>
-        <h3>What are Mysteries</h3>
-        <h4>Mystery credibility</h4>
-        <h4>Mystery spookiness</h4>
-        <h3>What are Evidences</h3>
-        <h4>Evidence Helpfulness</h4>
-        <h3>User account</h3>
-        <h4>Experience points</h4>
-    </div>
+        <h2 id="about">1. About Hauntrip</h2>
+        <h3 id="what-is-hauntrip">1.1. What is Hauntrip</h3>
+        <p>
+            Hauntrip is a webpage whose main purpose is to create and display a collection of mysteries, strange places or curious locations discovered
+            by users all around the world, ideal for those adventurous souls that wish to discover and learn about places anywhere in the world where
+            strange things happened... Or are currently happening. <br>
+            Keep in mind that the main objective of Hauntrip is to amuse and entertain, so do 
+            not take seriously everything you may see on this website.
+        </p>
+        <h3 id="what-are-mysteries">1.2. What are Mysteries</h3>
+        <p>
+            Mysteries are the heart of Hauntrip. Essentially, a Mystery is a post created by any user indicating a place where strange things
+            happened in the past, or where you may encounter something interesting if you currently go there. It could be anything, from 
+            abandoned buildings to places with high paranormal activty. <br>
+            Every mystery have a <i><b>Title</b></i> , which summarizes and identifies the mystery, a <i><b>Description</b></i>, which details what makes that place remarkable,
+            or even could tell a story about it, and a <i><b>Location</b></i>, which is a mark in the map to locate the mystery. Optionally, mysteries could have
+            a related image just to make it more interesting.
+            <br>
+            <br>
+            <b> Keep in mind that Hauntrip does not encourage visiting the places displayed on the website, so if you decide to go and explore any mystery, it will 
+            be at your own responsibility and risk. </b>
+        </p>
+        <h4 id="mystery-credibility">1.2-1. Mystery credibility</h4>
+        <p>
+            Mystery credibility is a numeric value which goes from 0 to 100 that describes how credible is a given mystery. A mystery with 0 credibilty
+            is a mystery that is probably fake, while a mystery with 100 credibilty is a mystery that is highly likely to be true. Credibility is calculated
+            by averaging the evidences that claims that the mystery is true versus the eviences that claims that the mystery is fake.
+        </p>
+        <h4 id="mystery-spookiness">1.2-2. Mystery spookiness</h4>
+        <p>
+            Mystery spookiness is a subjective rating which goes from 1 to 5 that describes how scary is the mystery. A mystery with a spookiness level
+            of 1 is a mystery that is mildly eerie at most, while a mystery with a spookiness level of 5 is a mystery that is highly scary. Spookiness
+            and credibility are unrelated: A fake mystery could tell a highly scary story, and it would be completely valid. Spookiness is calculated
+            by averaging the votes of the users, and anyone with a verified account can vote for any mystery.
+        </p>
+        <h3 id="what-are-evidences">1.3. What are Evidences</h3>
+        <p>
+            Evidences are posts within a Mystery whose purpose is to prove or disprove what the Mystery claims. For example, if a Mystery claims
+            that there is an abandoned house in a certain public place, and you happen to have photos of said abandoned house, you could post them as
+            evidence to prove the Mystery and increase its credibilty level. <br>
+            <br>
+            Every evidence have a <i><b>Title</b></i>, which summarizes the posted Evidence, a <i><b>Conclusion</b></i> to determine if your evidence
+            is proving or disproving the mystery (And thus, increase or decrease its credibility), a <i><b>Description</b></i>, where you can explain
+            in detail what your evidence claims. Optionally you could post up to three images to further support your evidence.
+        </p>
+        <h4 id="evidence-helpfulness">1.3-1. Evidence Helpfulness</h4>
+        <p>
+            Not every evidence posted on a given mystery is necessarily helpful or true. To distinguish which evidences are helpful, any user could
+            upvote or downvote any given evidence within a Mystery. Evidences that surpass certain number of upvotes will be marked as "Helpful". 
+            <b> Only those evidences that are marked as "Helpful" will impact on the mystery credibility.</b> This means that any "Helpful" evidences that claims
+            that the mystery is real will increase its credilibity, while "Helpful" evidences that disproves the mystery will decrease its credibility.
+        </p>
+        <h3 id="user-account">1.4. User account</h3>
+        <p>
+            Verified user accounts allows the user to post new Mysteries and Evidences. The user can see its own profile by clicking his username on
+            the top navigation bar. On the user profie, the user public information will be displayed, which includes: Username, Experience points,
+            account creation date, rank, and posted Mysteries. Any other information will not be shown.
+        </p>
+        <h4 id="experience-points">1.4-1. Experience points</h4>
+        <p>
+            By posting mysteries with high credibility, or by posting helpful evidence, the user may win "Experience points". Experience points
+            are a permanent value whose purpose is to show how trustworthy and experienced is any given user. Depending on the amount of experience
+            points, you could reach different ranks for your profile that goes between "Newbie Investigator" to "Master Investigator". 
+        </p>
+        <h4 id="account-deletion">1.4.2. Account deletion</h4>
+        <p>
+            The user may delete its account anytime. To do so, the user must be firstly logged in, and then press the "Delete account" button
+            located on its own profile, and then follow the instructions. The user account, along with all the user mysteries and evidences will 
+            be <b>PERMANENTLY</b> deleted, so keep this in mind if you are thinking about deleting your account.
+        </p>
+        <h3 id="report-system">1.5. Report system</h3>
+        <p>
+            Users can report any Mystery, Evidence or other user accounts if they find that they are inadequate, offensive, spam / troll, or if 
+            they are not complying with any of the terms and conditions. To do so, the user must click the Flag icon that is at the bottom of 
+            a Mystery, or at the right-most section of an Evidence, and then fulfill the required report form. To report an user account, the user
+            must press the button "Report user" on the desired user profile page, and then fulfill the required report. 
+        </p>
+        <h3 id="account-banning">1.6. Account banning</h3>
+        <p>
+            Your account could be temporally or permanently banned by a moderator if we detect that you are breaking the rules. Any mystery or 
+            evidence post that is considered inadequate can be deleted or edited without warning by a moderator. Please, check section "2.3. Conditions". 
+            to see what is considered inadequate, or could be a reason for banning.
+        </p>
     <div class="privacy-help">
-        <h2>Terms and conditions</h2>
-        <h3>Privacy Policy</h3>
-        <h3>Conditions</h3>
-        <h3>Contact</h3>
+        <h2 id="user-responsibilities">2. User responsibilities</h2>
+        <p>By creating an account on Hauntrip, the user accepts our Terms and conditions and our Privacy Policy, which can be found on the following sections</p>
+        <div>
+            <h3 id="terms-and-conditions">2.1. Terms and conditions</h3>
+            <p>Click the following link to see our <b> <a target="_blank" href="/multimedia/hauntrip-terms-and-conditions.pdf">Terms and conditions</a></b> </p>
+        </div>
+        <div>
+            <h3 id="privacy-policy">2.2. Privacy Policy</h3>
+            <p>Click the following link to see our <b> <a target="_blank" href="/multimedia/hauntrip-privacy-policy.pdf">Privacy Policy</a></b> </p>
+        </div>
+        <h3 id="conditions">2.3. Conditions</h3>
+        <p>To keep Hauntrip nice and friendly, we have some major rules that must be followed at all times. Breaking those rules could be sanctioned
+            with temporal or permanent ban, along with deletion of any / all of your Mysteries and Evidences. The following list containts the most 
+            important rules, but keep in mind that those are <b>SOME</b> of the rules, and not all of them. 
+            <ul>
+                <li>Offensive account usernames are forbidden</li>
+                <li>Offensive mysteries and / or evidences are forbidden</li>
+                <li>Spam and / or troll mysteries and / or evidences are forbidden</li>
+                <li>Spamming reports of any kind will be punished with permanent ban</li>
+                <li>Any attempt to overload the page with spam will be punished with permanent ban</li>
+                <li>Do not use copyrighted elements for your Mysteries / Evidences without permission</li>
+                <li>Never post highly violent, extremely bloody or gruesome images in Mysteries and / or evidences</li>
+                <li>Never post sexually explicit images in Mysteries and / or Evidences</li>
+            </ul>
+            If more information is required, please check our Terms and Conditions and Privacy Policy.
+        </p>
+        <h3 id="contact">2.4. Contact</h3>
+        <p>
+            If you need to write us about any situation, report a bug, or need assistance with anything related to Hauntrip, please feel free to
+            write us at our contact email: hauntrip.contact@gmail.com
+        </p>
     </div>
-
+    </div>
 </div>
 
 <script>document.title = 'Help | Hauntrip' </script>
